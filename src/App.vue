@@ -12,7 +12,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #app {
+
+ #app {
+  height: 100%;
   // font-family: 'Avenir', Helvetica, Arial, sans-serif;
   // -webkit-font-smoothing: antialiased;
   // -moz-osx-font-smoothing: grayscale;
@@ -22,5 +24,5 @@ export default {
   // img {
   //   width: 100px;
   // }
-// }
+  }
 </style>

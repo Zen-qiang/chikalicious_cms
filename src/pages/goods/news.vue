@@ -10,24 +10,27 @@
           <el-form-item label="新闻标题">
             <el-input v-model="sizeForm.name"></el-input>
           </el-form-item>
-          <el-date-picker v-model="value3" type="datetime" placeholder="选择日期时间" default-time="12:00:00">
-          </el-date-picker>
-          <el-button type="success">搜索</el-button>
+          <el-form-item label="发布时间">
+            <el-select v-model="sizeForm.region" placeholder="开始时间">
+              <el-option label="开始时间" value="开始时间"></el-option>
+            </el-select>
+          </el-form-item>
+            <el-button type="success">搜索</el-button>
         </el-form>
       </div>
       <el-row>
         <el-button class="add" @click="go" type="success">+添加新闻</el-button>
       </el-row>
-        <el-table :data="tableData" border style="width:100%">
-          <el-table-column prop="number" label="序号" width="90">
+      <el-table :data="showData" border style="width:100%">
+        <el-table-column prop="number" label="序号" width="145">
         </el-table-column>
-        <el-table-column prop="title" label="新闻标题" width="184">
+        <el-table-column prop="title" label="新闻标题" width="205">
         </el-table-column>
-        <el-table-column prop="time" label="发布时间" width="177">
+        <el-table-column prop="time" label="发表时间" width="192">
         </el-table-column>
-        <el-table-column label="操作" width="137">
+        <el-table-column label="操作" width="130">
           <template slot-scope="scope">
-            <el-button type="text" size="small">修改</el-button>
+            <el-button type="text" size="small" @click="dele">修改</el-button>
             <el-button type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
@@ -35,15 +38,16 @@
   </div>
 </template>
 <style type="text/css" lang="less" scoped>
-  .menu{
-    margin-top:106px;
+  .select{
+    height: 30px;
+    line-height: 5px;
   }
   .form{
     margin-top: 50px;
   }
   .add{
-    float: right;
-    margin-top:32px;
+     float: right;
+     margin-top: 50px;
   }
 </style>
 <script type="text/javascript">
@@ -51,21 +55,15 @@ export default{
   name: 'News',
   data () {
     return {
-      value3: '',
       sizeForm: {
         name: '',
         region: ''
       },
-      tableData: [
+      showData: [
         {
           number: 1,
-          title: '中国大事记',
-          time: '2018-09-15 23:55'
-        },
-        {
-          number: 2,
-          title: '中国大事记',
-          time: '2018-09-15 23:55'
+          title: '庆祝新中国成立69周年',
+          time: '2018-03-23 21:55'
         }
       ]
     }

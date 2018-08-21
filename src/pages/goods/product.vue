@@ -1,6 +1,6 @@
 <template>
-  <div id="dl_website">
-     <el-container>
+  <div id="dl-product">
+    <el-container>
         <!-- <el-aside>
             <ul class="news">
                 <li v-for='(value,key) in lists' :key='key' @click="change(key,value.value)" :class='{bg:changed==key}'>{{value.label}}</li>
@@ -11,42 +11,33 @@
   </div>
 </template>
 <script type="text/javascript">
-export default {
-  name: 'Website',
+export default{
+  name: 'Product',
   data () {
     return {
       changed: 0,
       lists: [
         {
-          label: '新闻',
-          value: 'News'
+          label: '上架商品列表',
+          value: 'ProductList'
         },
         {
-          label: '商品',
-          value: 'Good'
+          label: '新增修改商品',
+          value: 'GoodMange'
         },
         {
-          label: '店铺',
-          value: 'websiteStore'
+          label: '商品分类',
+          value: 'GoodClassify'
         },
         {
-          label: '首页',
-          value: 'websiteIndex'
-        },
-        {
-          label: '关于我们',
-          value: 'Aboutus'
-        },
-        {
-          label: '联系我们',
-          value: 'Contact'
+          label: '新闻管理',
+          value: 'NewsMange'
         }
       ]
     }
   },
   methods: {
     change (index, value) {
-      // this.active = true
       this.changed = index
       this.$router.push({name: value})
     }
