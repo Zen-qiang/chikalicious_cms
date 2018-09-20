@@ -1,6 +1,6 @@
-# tp
+# Chikalicious CMS
 
-> A Vue.js project
+> chikalicious 小程序后台管理系统
 
 ## Build Setup
 
