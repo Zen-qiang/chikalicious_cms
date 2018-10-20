@@ -30,6 +30,12 @@ export default [
       { label: '各地区零食管理', path: '/SnacksManage', name: 'SnacksManage' },
       { label: '各地区首页管理', path: '/SnacksHomepages', name: 'SnacksHomepages' }
     ]
+  },
+  {
+    item: { title: '订单' },
+    subItems: [
+      { label: '蛋糕订单管理', path: '/CakeOrders', name: 'CakeOrders' }
+    ]
   }
   // {
   //   item: { title: '店铺' },

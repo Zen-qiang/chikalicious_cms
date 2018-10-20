@@ -12,6 +12,8 @@ const CakeNewsAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/
 const SnacksClassify = () => import(/* webpackChunkName: "group-snacks" */ '../pages/snacks/snacksClassify.vue')
 const SnacksManage = () => import(/* webpackChunkName: "group-snacks" */ '../pages/snacks/snacksManage.vue')
 const SnacksHomepages = () => import(/* webpackChunkName: "group-snacks" */ '../pages/snacks/snacksHomepages.vue')
+// 订单
+const CakeOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/cakeOrders.vue')
 
 Vue.use(Router)
 
@@ -98,6 +100,15 @@ export default new Router({
           component: SnacksHomepages,
           meta: {
             title: '各地区首页管理'
+          }
+        },
+        // 订单
+        {
+          path: '/CakeOrders',
+          name: 'CakeOrders',
+          component: CakeOrders,
+          meta: {
+            title: '订单管理'
           }
         }
       ]
