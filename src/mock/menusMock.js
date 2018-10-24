@@ -52,7 +52,7 @@ export default [
     subItems: [
       { label: '会员管理', path: '/MemberManage', name: 'MemberManage' }
     ]
-  },
+  }
   // {
   //   item: { title: '订单' },
   //   subItems: [

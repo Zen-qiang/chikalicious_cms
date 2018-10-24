@@ -180,7 +180,7 @@ export default new Router({
           component: ShopList,
           meta: {
             title: '店铺地址管理',
-			requiresAuth: true
+            requiresAuth: true
           }
         },
         {
@@ -189,7 +189,7 @@ export default new Router({
           component: ShopRegionManage,
           meta: {
             title: '店铺地区管理',
-			requiresAuth: true
+            requiresAuth: true
           }
         },
         // 会员
@@ -199,7 +199,7 @@ export default new Router({
           component: MemberManage,
           meta: {
             title: '会员管理',
-			requiresAuth: true
+            requiresAuth: true
           }
         }
       ]
