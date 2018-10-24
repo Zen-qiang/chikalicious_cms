@@ -14,7 +14,8 @@ const SnacksManage = () => import(/* webpackChunkName: "group-snacks" */ '../pag
 const SnacksHomepages = () => import(/* webpackChunkName: "group-snacks" */ '../pages/snacks/snacksHomepages.vue')
 // 订单
 const CakeOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/cakeOrders.vue')
-const SnackOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/SnackOrders.vue')
+const SnackOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/snackOrders.vue')
+const KitchenOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/kitchenOrders.vue')
 const OrderDetail = () => import(/* webpackChunkName: "group-order" */ '../pages/order/orderDetail.vue')
 
 Vue.use(Router)
@@ -128,6 +129,15 @@ export default new Router({
           component: SnackOrders,
           meta: {
             title: '零食订单管理',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/KitchenOrders',
+          name: 'KitchenOrders',
+          component: KitchenOrders,
+          meta: {
+            title: '厨房订单管理',
             requiresAuth: true
           }
         },
