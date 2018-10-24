@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Orders :tabs="tabs" :columns="columns" :type="type"></Orders>
+    <Orders :tabs="tabs" :columns="columns" :type="type" :expressCompanyList="expressCompanyList" ref="snackOrders"></Orders>
   </div>
 </template>
 <script>
@@ -16,7 +16,7 @@ export default {
         label: '全部订单',
         name: ''
       }, {
-        label: '待发货',
+        label: '待付款',
         name: 'WAITING_PAYMENT'
       }, {
         label: '待收货',
@@ -25,6 +25,7 @@ export default {
         label: '已完成',
         name: 'COMPLETED'
       }],
+      expressCompanyList: ['顺丰速运', '圆通速递', '中通快递', '百世快递', '韵达速递', '申通快递', '天天快递', '德邦快递', '邮政EMS'],
       columns: [{
         title: '订单编号',
         sortable: true,
@@ -124,50 +125,7 @@ export default {
         title: '操作',
         align: 'center',
         width: 100,
-        // key: 'name',
-        render: (h, params) => {
-          return h('div', {
-            style: {
-              textAlign: 'center'
-            }
-          }, [
-            h('p', [
-              h('Button', {
-                props: {
-                  type: 'success',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.$router.push({
-                      name: 'SnackOrderDetail',
-                      params: {
-                        id: params.row.orderID,
-                        type: this.type
-                      }
-                    })
-                  }
-                }
-              }, '查看详情')
-            ]),
-            h('p', [
-              h('Button', {
-                props: {
-                  type: 'success',
-                  size: 'small'
-                },
-                style: {
-                  marginTop: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.confirmReceipt(params.row.orderID)
-                  }
-                }
-              }, '确认收货')
-            ])
-          ])
-        }
+        render: this.operationRender
       }],
       type: 'SNACK'
     }
@@ -195,6 +153,74 @@ export default {
         onCancel: () => {
         }
       })
+    },
+    operationRender (h, params) {
+      let childrens = []
+      childrens.push(
+        h('p', [
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
+            },
+            on: {
+              click: () => {
+                this.$router.push({
+                  name: 'SnackOrderDetail',
+                  params: {
+                    id: params.row.orderID,
+                    type: this.type
+                  }
+                })
+              }
+            }
+          }, '查看详情')
+        ])
+      )
+      // 待收货并且没有快递单号，显示确认发货
+      if (params.row.statusEn === 'WAITING_EXTRACT' && !params.row.waybill_num) {
+        childrens.push(
+          h('p', [
+            h('Button', {
+              props: {
+                type: 'success',
+                size: 'small'
+              },
+              style: {
+                marginTop: '5px'
+              },
+              on: {
+                click: () => {
+                  console.log(params.row.statusEn)
+                  this.$refs.snackOrders.showExpressModal(params.row)
+                }
+              }
+            }, '确认发货')
+          ])
+        )
+      }
+      // 待收货并且有快递单号显示确认收货
+      if (params.row.statusEn === 'WAITING_EXTRACT' && params.row.waybill_num) {
+        childrens.push(
+          h('p', [
+            h('Button', {
+              props: {
+                type: 'success',
+                size: 'small'
+              },
+              style: {
+                marginTop: '5px'
+              },
+              on: {
+                click: () => {
+                  this.confirmReceipt(params.row.orderID)
+                }
+              }
+            }, '确认收货')
+          ])
+        )
+      }
+      return h('div', { style: { textAlign: 'center' } }, childrens)
     }
   }
 }

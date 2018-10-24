@@ -135,49 +135,7 @@ export default {
         align: 'center',
         width: 100,
         // key: 'name',
-        render: (h, params) => {
-          return h('div', {
-            style: {
-              textAlign: 'center'
-            }
-          }, [
-            h('p', [
-              h('Button', {
-                props: {
-                  type: 'success',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.$router.push({
-                      name: 'CakeOrderDetail',
-                      params: {
-                        id: params.row.orderID,
-                        type: this.type
-                      }
-                    })
-                  }
-                }
-              }, '查看详情')
-            ]),
-            h('p', [
-              h('Button', {
-                props: {
-                  type: 'success',
-                  size: 'small'
-                },
-                style: {
-                  marginTop: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.confirmReceipt(params.row.orderID)
-                  }
-                }
-              }, '确认收货')
-            ])
-          ])
-        }
+        render: this.operationRender
       }],
       type: 'CAKE'
     }
@@ -205,6 +163,52 @@ export default {
         onCancel: () => {
         }
       })
+    },
+    operationRender (h, params) {
+      let childrens = []
+      childrens.push(
+        h('p', [
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
+            },
+            on: {
+              click: () => {
+                this.$router.push({
+                  name: 'SnackOrderDetail',
+                  params: {
+                    id: params.row.orderID,
+                    type: this.type
+                  }
+                })
+              }
+            }
+          }, '查看详情')
+        ])
+      )
+      // 待收货显示确认收货
+      if (params.row.statusEn === 'WAITING_EXTRACT') {
+        childrens.push(
+          h('p', [
+            h('Button', {
+              props: {
+                type: 'success',
+                size: 'small'
+              },
+              style: {
+                marginTop: '5px'
+              },
+              on: {
+                click: () => {
+                  this.confirmReceipt(params.row.orderID)
+                }
+              }
+            }, '确认收货')
+          ])
+        )
+      }
+      return h('div', { style: { textAlign: 'center' } }, childrens)
     }
   }
 }

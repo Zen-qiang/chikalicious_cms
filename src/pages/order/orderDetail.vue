@@ -100,7 +100,9 @@ export default {
             if (res.data.code === -1) {
               this.$Message.warning(res.data.message)
             } else {
+              this.queryOrderById()
               this.$Message.success('操作成功')
+              this.$Modal.remove()
             }
           }).catch(err => {
             console.log(err)
