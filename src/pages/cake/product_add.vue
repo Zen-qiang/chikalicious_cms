@@ -1,24 +1,32 @@
 <template>
   <div>
-    <Form ref='formInline' :model='formInline' :rules='ruleInline'>
-      <FormItem prop='title'>
-        <Input type='text' v-model='formInline.title' placeholder='title' />
-      </FormItem>
-      <FormItem>
-        <input id='fileinput' style='display:block' @change='uploading($event)' type='file' accept='image/*' />
-        <img :src='src' :style="{width: src ? '100px' : '', height: src ? '100px' : ''}"/>
-      </FormItem>
-        <FormItem>
-          <editor :value='formInline.content' :isClear='isClear' @change="change"></editor>
-      </FormItem>
-      <FormItem>
-          <Button type='primary' @click="handleSubmit('formInline')">保存</Button>
-      </FormItem>
-    </Form>
+    <section class="cakeNews-container">
+     <div class="fx">
+      <p>商品名称:</p>
+      <p>
+        <Input id="productName" type='text' v-model='name' placeholder='title' />
+      </p>
+      </div>
+      <div class="fx" style="margin-top:30px">
+      <p>商品分类:</p>
+      <p>
+          <CheckboxGroup v-model="fkCategoryIds">
+            <Checkbox v-for="categoryInfo in categoryInfoList" :label="categoryInfo.id" :key="categoryInfo.id" style="margin-right:20px">{{categoryInfo.value}}</Checkbox>
+          </CheckboxGroup>
+      </p>
+      </div>
+      <div class="fx" style="margin-top:30px">
+      <p>商品规格:</p>
+      <p>
+        <i-switch/>
+      </p>
+      </div>
+    </section>
   </div>
 </template>
 <script>
 import Editor from '../../components/Editor.vue'
+import { notBlank } from '../../mixin/mixin'
 export default {
   components: {
     Editor
@@ -26,23 +34,16 @@ export default {
   data () {
     return {
       src: '',
-      isClear: false,
-      formInline: {
-        title: '',
-        file: '',
-        content: '',
-        id: ''
-      },
-      ruleInline: {
-        title: [{ required: true, message: '请输入新闻标题', trigger: 'blur' }],
-        content: [
-          { required: true, message: '请输入新闻内容', trigger: 'blur' }
-        ]
-      }
+      name: '',
+      categoryInfoList: [],
+      specificationsList: [],
+      fkCategoryIds: []
     }
   },
+  mixins: [notBlank],
   created () {
     if (this.routerParams) this.getNewInfo()
+    this.getCategoryInfo()
   },
   computed: {
     routerParams () {
@@ -50,10 +51,6 @@ export default {
     }
   },
   methods: {
-    change (data) {
-      console.log(data)
-      this.formInline.content = data
-    },
     getNewInfo () {
       // this.loading = true
       this.$axios.get('/product/queryNewsById', {
@@ -74,12 +71,20 @@ export default {
         // this.loading = false
       })
     },
-    uploading (event) {
-      this.formInline.file = event.target.files[0]
-      // 获取文件
-      var windowURL = window.URL || window.webkitURL
-      this.formInline.file = event.target.files[0] // 创建图片文件的url
-      this.src = windowURL.createObjectURL(event.target.files[0])
+    getCategoryInfo () {
+      this.$axios.get('/product/queryProductTypeByListId', {
+        params: {
+          type: this.cake
+          // provinceId: 34,
+          // cityId: this.cityId
+        }
+      }).then(res => {
+        if (res.data.code === 666) {
+          this.categoryInfoList = res.data.data
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     handleSubmit (name) {
       this.$refs[name].validate(valid => {

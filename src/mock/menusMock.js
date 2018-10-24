@@ -39,19 +39,20 @@ export default [
       { label: '订单详情', path: '/CakeOrders/CakeOrderDetail', name: 'CakeOrderDetail', children: true },
       { label: '订单详情', path: '/SnackOrders/SnackOrderDetail', name: 'SnackOrderDetail', children: true }
     ]
-  }
-  // {
-  //   item: { title: '店铺' },
-  //   subItems: [
-  //     { label: '' }
-  //   ]
-  // },
-  // {
-  //   item: { title: '会员' },
-  //   subItems: [
-  //     { label: '' }
-  //   ]
-  // },
+  },
+  {
+    item: { title: '店铺' },
+    subItems: [
+      { label: '地区管理', path: '/ShopRegionManage', name: 'ShopRegionManage' },
+      { label: '地址管理', path: '/ShopList', name: 'ShopList' }
+    ]
+  },
+  {
+    item: { title: '会员' },
+    subItems: [
+      { label: '会员管理', path: '/MemberManage', name: 'MemberManage' }
+    ]
+  },
   // {
   //   item: { title: '订单' },
   //   subItems: [

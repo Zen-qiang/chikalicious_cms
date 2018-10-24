@@ -8,6 +8,7 @@ const CakeManage = () => import(/* webpackChunkName: "group-cake" */ '../pages/c
 const CakeHomepages = () => import(/* webpackChunkName: "group-cake" */ '../pages/cake/cakeHomepages.vue')
 const CakeNews = () => import(/* webpackChunkName: "group-cake" */ '../pages/cake/cakeNews.vue')
 const CakeNewsAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/cake/cakeNews_add.vue')
+const ProductAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/cake/product_add.vue')
 // 零食 [零食分类 各地区零食管理 各地区首页管理]
 const SnacksClassify = () => import(/* webpackChunkName: "group-snacks" */ '../pages/snacks/snacksClassify.vue')
 const SnacksManage = () => import(/* webpackChunkName: "group-snacks" */ '../pages/snacks/snacksManage.vue')
@@ -16,6 +17,11 @@ const SnacksHomepages = () => import(/* webpackChunkName: "group-snacks" */ '../
 const CakeOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/cakeOrders.vue')
 const SnackOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/SnackOrders.vue')
 const OrderDetail = () => import(/* webpackChunkName: "group-order" */ '../pages/order/orderDetail.vue')
+// 店铺
+const ShopList = () => import(/* webpackChunkName: "group-order" */ '../pages/shop/shopList.vue')
+const ShopRegionManage = () => import(/* webpackChunkName: "group-order" */ '../pages/shop/shopRegionManage.vue')
+// 会员
+const MemberManage = () => import(/* webpackChunkName: "group-order" */ '../pages/merber/memberManage.vue')
 
 Vue.use(Router)
 
@@ -72,6 +78,14 @@ export default new Router({
           meta: {
             title: '新闻管理',
             requiresAuth: true
+          }
+        },
+        {
+          path: '/CakeManage/ProductAdd',
+          name: 'ProductAdd',
+          component: ProductAdd,
+          meta: {
+            title: '保存商品'
           }
         },
         {
@@ -147,6 +161,35 @@ export default new Router({
           meta: {
             title: '订单详情',
             requiresAuth: true
+          }
+        },
+        // 店铺
+        {
+          path: '/ShopList',
+          name: 'ShopList',
+          component: ShopList,
+          meta: {
+            title: '店铺地址管理',
+			requiresAuth: true
+          }
+        },
+        {
+          path: '/ShopRegionManage',
+          name: 'ShopRegionManage',
+          component: ShopRegionManage,
+          meta: {
+            title: '店铺地区管理',
+			requiresAuth: true
+          }
+        },
+        // 会员
+        {
+          path: '/MemberManage',
+          name: 'MemberManage',
+          component: MemberManage,
+          meta: {
+            title: '会员管理',
+			requiresAuth: true
           }
         }
       ]

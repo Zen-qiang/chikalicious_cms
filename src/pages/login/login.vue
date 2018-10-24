@@ -51,8 +51,10 @@ export default {
         return
       }
       this.loading = true
-      this.$axios.get('/login', {
-        params: {
+      this.$axios({
+        url: '/login',
+        method: 'post',
+        data: {
           userName: this.userName,
           password: this.password
         }
