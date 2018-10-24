@@ -4,6 +4,7 @@ import router from '../router'
 // 响应时间
 axios.defaults.timeout = 30000
 // 配置请求头
+// axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 // axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded'
 // 添加凭证

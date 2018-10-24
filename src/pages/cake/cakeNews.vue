@@ -15,7 +15,7 @@
     </head-search>
     <section class="cakeNews-container">
       <div>
-        <Button type="primary" icon="md-add" :to="{name: 'CakeNewsAdd'}">添加新闻</Button>
+        <Button type="primary" icon="md-add"  to="/CakeNews/CakeNewsAdd">添加新闻</Button>
       </div>
       <div class="cakeNews-container-content">
         <Table border :loading="loading" :columns="columns" :data="newsData"></Table>
@@ -26,6 +26,7 @@
     </section>
   </div>
 </template>
+
 <script>
 import HeadSearch from '../../components/HeadSearch.vue'
 export default {
@@ -42,68 +43,73 @@ export default {
       offset: 0,
       limit: 10,
       loading: false,
-      columns: [
-        {
-          title: '序号',
-          key: 'index',
-          align: 'center',
-          width: 60,
-          render: (h, params) => {
-            return h('div', [
-              h('strong', 1 + params.index + this.offset * this.limit)
-            ])
-          }
-        },
-        {
-          title: '新闻标题',
-          key: 'title',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '发布时间',
-          key: 'releaseTime',
-          align: 'center',
-          tooltip: true,
-          render: (h, params) => {
-            return h('div', [
-              h('span', this.$moment(params.row.releaseTime).format('YYYY-MM-DD / hh:mm'))
-            ])
-          }
-        },
-        {
-          title: '操作',
-          key: 'action',
-          align: 'center',
-          width: 160,
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'text'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.$router.push(`/CakeNews/CakeNewsAdd/${params.row.id}`)
-                  }
-                }
-              }, '修改'),
-              h('Button', {
-                props: {
-                  type: 'text'
-                },
-                on: {
-                  click: () => {
-                    this.deleteNews(params.row.id)
-                  }
-                }
-              }, '删除')
-            ])
-          }
+      columns: [{
+        title: '序号',
+        key: 'index',
+        align: 'center',
+        width: 60,
+        render: (h, params) => {
+          return h('div', [
+            h('strong', 1 + params.index + this.offset * this.limit)
+          ])
         }
+      },
+      {
+        title: '新闻标题',
+        key: 'title',
+        align: 'center',
+        tooltip: true
+      },
+      {
+        title: '发布时间',
+        key: 'releaseTime',
+        align: 'center',
+        tooltip: true,
+        render: (h, params) => {
+          return h('div', [
+            h('span', this.$moment(params.row.releaseTime).format('YYYY-MM-DD / hh:mm'))
+          ])
+        }
+      },
+      {
+        title: '操作',
+        key: 'action',
+        align: 'center',
+        width: 160,
+        render: (h, params) => {
+          return h('div', [
+            h('Button', {
+              props: {
+                type: 'text'
+              },
+              style: {
+                marginRight: '5px'
+              },
+              on: {
+                click: () => {
+                  // this.$router.push(`/CakeNews/CakeNewsAdd/${params.row.id}`)
+                  this.$router.push({
+                    name: 'CakeNewsAdd',
+                    params: {
+                      id: params.row.id
+                    }
+                  })
+                }
+              }
+            }, '修改'),
+            h('Button', {
+              props: {
+                type: 'text'
+              },
+              on: {
+                click: () => {
+                  this.deleteNews(params.row.id)
+                }
+              }
+            }, '删除')
+          ])
+        }
+      }
       ]
     }
   },
@@ -144,7 +150,9 @@ export default {
       this.$Modal.confirm({
         title: '确定删除该新闻吗？',
         onOk: () => {
-          this.$axios.post('/product/deleteNewsById', {id: id}).then(res => {
+          this.$axios.post('/product/deleteNewsById', {
+            id: id
+          }).then(res => {
             console.log(res)
             this.$Message.success('This is a success tip')
             this.getNewsData()
@@ -163,6 +171,7 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .cakeNews {
   &-searchContent {
@@ -171,7 +180,7 @@ export default {
     }
   }
   &-container {
-    > div {
+    >div {
       padding-bottom: 20px;
     }
     &-page {
