@@ -6,7 +6,7 @@
           <div class="layout-logo">Chikslicious商城</div>
           <div class="layout-nav">
             <div @click.stop="showPopbox = !showPopbox">
-              <span>user</span>
+              <span style="margin-right:10px">{{userName}}</span>
               <Avatar icon="ios-person" />
             </div>
             <pop-box :showPopbox.sync="showPopbox">
@@ -64,7 +64,8 @@ export default {
     return {
       menusMock: menusMock,
       selectMenu_index: 0,
-      showPopbox: false
+      showPopbox: false,
+      userName: localStorage.getItem('session-token')
     }
   },
   computed: {

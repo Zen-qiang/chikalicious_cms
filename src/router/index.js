@@ -14,6 +14,8 @@ const SnacksManage = () => import(/* webpackChunkName: "group-snacks" */ '../pag
 const SnacksHomepages = () => import(/* webpackChunkName: "group-snacks" */ '../pages/snacks/snacksHomepages.vue')
 // 订单
 const CakeOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/cakeOrders.vue')
+const SnackOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/SnackOrders.vue')
+const OrderDetail = () => import(/* webpackChunkName: "group-order" */ '../pages/order/orderDetail.vue')
 
 Vue.use(Router)
 
@@ -41,7 +43,8 @@ export default new Router({
           name: 'CakeClassify',
           component: CakeClassify,
           meta: {
-            title: '蛋糕分类'
+            title: '蛋糕分类',
+            requiresAuth: true
           }
         },
         {
@@ -49,7 +52,8 @@ export default new Router({
           name: 'CakeManage',
           component: CakeManage,
           meta: {
-            title: '各地区蛋糕管理'
+            title: '各地区蛋糕管理',
+            requiresAuth: true
           }
         },
         {
@@ -57,7 +61,8 @@ export default new Router({
           name: 'CakeHomepages',
           component: CakeHomepages,
           meta: {
-            title: '各地区首页管理'
+            title: '各地区首页管理',
+            requiresAuth: true
           }
         },
         {
@@ -65,7 +70,8 @@ export default new Router({
           name: 'CakeNews',
           component: CakeNews,
           meta: {
-            title: '新闻管理'
+            title: '新闻管理',
+            requiresAuth: true
           }
         },
         {
@@ -73,7 +79,8 @@ export default new Router({
           name: 'CakeNewsAdd',
           component: CakeNewsAdd,
           meta: {
-            title: '添加新闻'
+            title: '添加新闻',
+            requiresAuth: true
           },
           alias: '/CakeNews/CakeNewsAdd/:id'
         },
@@ -83,7 +90,8 @@ export default new Router({
           name: 'SnacksClassify',
           component: SnacksClassify,
           meta: {
-            title: '零食分类'
+            title: '零食分类',
+            requiresAuth: true
           }
         },
         {
@@ -91,7 +99,8 @@ export default new Router({
           name: 'SnacksManage',
           component: SnacksManage,
           meta: {
-            title: '各地区零食管理'
+            title: '各地区零食管理',
+            requiresAuth: true
           }
         },
         {
@@ -99,7 +108,8 @@ export default new Router({
           name: 'SnacksHomepages',
           component: SnacksHomepages,
           meta: {
-            title: '各地区首页管理'
+            title: '各地区首页管理',
+            requiresAuth: true
           }
         },
         // 订单
@@ -108,7 +118,35 @@ export default new Router({
           name: 'CakeOrders',
           component: CakeOrders,
           meta: {
-            title: '订单管理'
+            title: '蛋糕订单管理',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/SnackOrders',
+          name: 'SnackOrders',
+          component: SnackOrders,
+          meta: {
+            title: '零食订单管理',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/CakeOrders/CakeOrderDetail',
+          name: 'CakeOrderDetail',
+          component: OrderDetail,
+          meta: {
+            title: '订单详情',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/SnackOrders/SnackOrderDetail',
+          name: 'SnackOrderDetail',
+          component: OrderDetail,
+          meta: {
+            title: '订单详情',
+            requiresAuth: true
           }
         }
       ]

@@ -32,7 +32,15 @@ iView.LoadingBar.config({
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
   Util.title(to.meta.title)
-  next()
+  let token = window.localStorage.getItem('session-token')
+  if (to.matched.some(record => record.meta.requiresAuth) && (!token || token === null)) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  } else {
+    next()
+  }
 })
 
 router.afterEach((to, from, next) => {

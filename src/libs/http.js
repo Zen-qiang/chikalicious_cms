@@ -1,5 +1,6 @@
 import axios from 'axios'
 import qs from 'querystring'
+import router from '../router'
 // 响应时间
 axios.defaults.timeout = 30000
 // 配置请求头
@@ -28,9 +29,9 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     response.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    // if (response.data.code === 1002) {
-    //   this.$router.push({ 'name': 'FairOrderList' })
-    // }
+    if (response.data.code === 2011) {
+      router.replace({ 'name': 'Login' })
+    }
     return response
   },
   error => {

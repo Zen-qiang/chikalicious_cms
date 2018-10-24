@@ -6,7 +6,7 @@
 <script>
 import Orders from '../../components/orders.vue'
 export default {
-  name: 'cakeOrders',
+  name: 'snackOders',
   components: {
     Orders
   },
@@ -16,8 +16,8 @@ export default {
         label: '全部订单',
         name: ''
       }, {
-        label: '制作中',
-        name: 'IN_PRODUCTUIN'
+        label: '待发货',
+        name: 'WAITING_PAYMENT'
       }, {
         label: '待收货',
         name: 'WAITING_EXTRACT'
@@ -98,20 +98,10 @@ export default {
           ])
         }
       }, {
-        title: '餐具信息',
+        title: '收货地址',
         align: 'center',
         width: 120,
-        key: 'name',
-        render: (h, params) => {
-          return h('div', {
-            style: {
-              textAlign: 'center'
-            }
-          }, [
-            h('p', '蜡烛：' + params.row.product[0].needCandle),
-            h('p', '餐具：' + params.row.product[0].tablewareNum + '份')
-          ])
-        }
+        key: 'address'
       }, {
         title: '订单金额',
         sortable: true,
@@ -150,7 +140,7 @@ export default {
                 on: {
                   click: () => {
                     this.$router.push({
-                      name: 'CakeOrderDetail',
+                      name: 'SnackOrderDetail',
                       params: {
                         id: params.row.orderID,
                         type: this.type
@@ -179,7 +169,7 @@ export default {
           ])
         }
       }],
-      type: 'CAKE'
+      type: 'SNACK'
     }
   },
   created () {
