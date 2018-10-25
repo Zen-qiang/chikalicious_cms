@@ -173,6 +173,15 @@ export default new Router({
             requiresAuth: true
           }
         },
+        {
+          path: '/KitchenOrders/KitchenOrderDetail',
+          name: 'KitchenOrderDetail',
+          component: OrderDetail,
+          meta: {
+            title: '订单详情',
+            requiresAuth: true
+          }
+        },
         // 店铺
         {
           path: '/ShopList',

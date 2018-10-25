@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Orders :tabs="tabs" :columns="columns" :type="type"></Orders>
+    <Orders :tabs="tabs" :columns="columns" :type="type" :queryFrom="queryFrom" ref="orders" @acceptOrders="acceptOrders" @productionFinish="productionFinish"></Orders>
   </div>
 </template>
 <script>
@@ -14,15 +14,18 @@ export default {
     return {
       tabs: [{
         label: '未接订单',
-        name: ''
+        name: 'WAITTING_ACCEPTED'
       }, {
         label: '制作中',
-        name: 'IN_PRODUCTUIN'
+        name: 'ACCEPTED'
       }, {
         label: '已完成',
         name: 'COMPLETED'
       }],
       columns: [{
+        type: 'selection',
+        width: 50
+      }, {
         title: '订单编号',
         sortable: true,
         align: 'center',
@@ -120,7 +123,7 @@ export default {
         sortable: true,
         width: 120,
         align: 'center',
-        key: 'status'
+        key: 'productionStatus'
       }, {
         title: '店铺名称',
         sortable: true,
@@ -130,37 +133,21 @@ export default {
       }, {
         title: '操作',
         align: 'center',
-        width: 100,
+        width: 110,
         // key: 'name',
         render: this.operationRender
       }],
-      type: 'CAKE'
+      type: 'CAKE',
+      queryFrom: 'kitchen',
+      ids: []
     }
   },
   created () {
   },
   methods: {
-    confirmReceipt (orderID) {
-      this.$Modal.confirm({
-        title: '是否确认已收货',
-        content: '是否确认已收货？',
-        onOk: () => {
-          this.$axios.post('/order/confirmReceipt', {
-            orderID: orderID
-          }).then(res => {
-            if (res.data.code === -1) {
-              this.$Message.warning(res.data.message)
-            } else {
-              this.$Message.success('操作成功')
-            }
-          }).catch(err => {
-            console.log(err)
-          })
-        },
-        onCancel: () => {
-        }
-      })
-    },
+    /**
+     * @name  操作列渲染
+     */
     operationRender (h, params) {
       let childrens = []
       childrens.push(
@@ -173,10 +160,11 @@ export default {
             on: {
               click: () => {
                 this.$router.push({
-                  name: 'SnackOrderDetail',
+                  name: 'KitchenOrderDetail',
                   params: {
                     id: params.row.orderID,
-                    type: this.type
+                    type: this.type,
+                    from: 'kitchen'
                   }
                 })
               }
@@ -184,8 +172,8 @@ export default {
           }, '查看详情')
         ])
       )
-      // 待收货显示确认收货
-      if (params.row.statusEn === 'WAITING_EXTRACT') {
+      // 未接受订单显示接受、打印订单按钮
+      if (params.row.productionStatusEn === 'WAITTING_ACCEPTED') {
         childrens.push(
           h('p', [
             h('Button', {
@@ -198,14 +186,151 @@ export default {
               },
               on: {
                 click: () => {
-                  this.confirmReceipt(params.row.orderID)
+                  this.ids = []
+                  this.ids.push(params.row.orderID)
+                  this.acceptOrders(this.ids)
                 }
               }
-            }, '确认收货')
+            }, '接受')
+          ])
+        )
+      }
+      // 厨房未打印订单显示打印订单按钮，打印订单同时接受订单
+      if (params.row.productionStatusEn !== 'COMPLETED') {
+        if (params.row.kitchenPrinted) {
+          childrens.push(
+            h('p', [
+              h('Button', {
+                props: {
+                  // type: 'success',
+                  size: 'small',
+                  disabled: true
+                },
+                style: {
+                  marginTop: '5px'
+                }
+              }, '订单已打印')
+            ])
+          )
+        } else {
+          childrens.push(
+            h('p', [
+              h('Button', {
+                props: {
+                  type: 'success',
+                  size: 'small'
+                },
+                style: {
+                  marginTop: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.ids = []
+                    this.ids.push(params.row.orderID)
+                    this.printOrder(this.ids)
+                  }
+                }
+              }, '打印订单')
+            ])
+          )
+        }
+      }
+      // 制作中订单显示已完成按钮
+      if (params.row.productionStatusEn === 'ACCEPTED') {
+        childrens.push(
+          h('p', [
+            h('Button', {
+              props: {
+                type: 'success',
+                size: 'small'
+              },
+              style: {
+                marginTop: '5px'
+              },
+              on: {
+                click: () => {
+                  this.ids = []
+                  this.ids.push(params.row.orderID)
+                  this.productionFinish(this.ids)
+                }
+              }
+            }, '已完成')
           ])
         )
       }
       return h('div', { style: { textAlign: 'center' } }, childrens)
+    },
+    /**
+     * @name 接受订单
+     * @param 订单ID数组
+     */
+    acceptOrders (ids) {
+      this.$Modal.confirm({
+        title: '是否接受订单',
+        onOk: () => {
+          this.$axios.post('/order/acceptOrders', {
+            idsJson: JSON.stringify(ids)
+          }).then(res => {
+            if (res.data.code !== 666) {
+              this.$Message.warning(res.data.message)
+            } else {
+              this.$refs.orders.queryOrders()
+              this.$Message.success('接受订单成功')
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        }
+      })
+    },
+    /**
+     * @name  完成订单
+     * @param orderID 订单ID
+     */
+    productionFinish (ids) {
+      this.$Modal.confirm({
+        title: '是否确认已完成',
+        onOk: () => {
+          this.$axios.post('/order/productionFinish', {
+            idsJson: JSON.stringify(ids)
+          }).then(res => {
+            if (res.data.code !== 666) {
+              this.$Message.warning(res.data.message)
+            } else {
+              this.$refs.orders.queryOrders()
+              this.$Message.success('订单已完成')
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        }
+      })
+    },
+    /**
+     * @name 打印订单
+     * @param orderId 订单ID
+     */
+    printOrder (ids) {
+      this.$Modal.confirm({
+        title: '是否打印订单',
+        onOk: () => {
+          this.$Notice.success({
+            title: '订单正在打印..'
+          })
+          this.$axios.post('/order/printOrder', {
+            idsJson: JSON.stringify(ids)
+          }).then(res => {
+            if (res.data.code !== 666) {
+              this.$Message.warning(res.data.message)
+            } else {
+              this.$refs.orders.queryOrders()
+              this.$Message.success('订单打印成功')
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        }
+      })
     }
   }
 }

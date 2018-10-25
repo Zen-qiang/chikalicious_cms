@@ -36,8 +36,10 @@ export default [
     subItems: [
       { label: '蛋糕订单管理', path: '/CakeOrders', name: 'CakeOrders' },
       { label: '零食订单管理', path: '/SnackOrders', name: 'SnackOrders' },
+      { label: '厨房订单管理', path: '/KitchenOrders', name: 'KitchenOrders' },
       { label: '订单详情', path: '/CakeOrders/CakeOrderDetail', name: 'CakeOrderDetail', children: true },
-      { label: '订单详情', path: '/SnackOrders/SnackOrderDetail', name: 'SnackOrderDetail', children: true }
+      { label: '订单详情', path: '/SnackOrders/SnackOrderDetail', name: 'SnackOrderDetail', children: true },
+      { label: '订单详情', path: '/KitchenOrders/KitchenOrderDetail', name: 'KitchenOrderDetail', children: true }
     ]
   },
   {

@@ -133,17 +133,21 @@ export default {
   created () {
   },
   methods: {
+    /**
+     * @name  确认收货
+     * @param orderID 订单ID
+     */
     confirmReceipt (orderID) {
       this.$Modal.confirm({
         title: '是否确认已收货',
-        content: '是否确认已收货？',
         onOk: () => {
           this.$axios.post('/order/confirmReceipt', {
             orderID: orderID
           }).then(res => {
-            if (res.data.code === -1) {
+            if (res.data.code !== 666) {
               this.$Message.warning(res.data.message)
             } else {
+              this.$refs.orders.queryOrders()
               this.$Message.success('操作成功')
             }
           }).catch(err => {
@@ -154,6 +158,9 @@ export default {
         }
       })
     },
+    /**
+     * @name  操作列渲染
+     */
     operationRender (h, params) {
       let childrens = []
       childrens.push(
@@ -191,7 +198,7 @@ export default {
               },
               on: {
                 click: () => {
-                  console.log(params.row.statusEn)
+                  // console.log(params.row.statusEn)
                   this.$refs.snackOrders.showExpressModal(params.row)
                 }
               }

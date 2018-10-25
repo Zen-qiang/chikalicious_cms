@@ -3,7 +3,7 @@
     <head-search @hander-search="queryOrders">
       <Row :gutter="8">
         <Col span="24">
-          <RegionSelect @getCurrentCity="getCurrentCity" @getCurrentProvince="getCurrentProvince"></RegionSelect>
+          <RegionSelect @getCurrentCity="getCurrentCity" @getCurrentProvince="getCurrentProvince" :type="type"></RegionSelect>
         </Col>
       </Row>
     </head-search>
@@ -28,8 +28,16 @@
         <DatePicker format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="" style="width: 200px" :transfer="true" @on-change="getOrderDate"></DatePicker>
       </Col>
     </Row>
+    <!-- 仅厨房订单时可见 -->
+    <Row style="margin-top: 10px" v-if="params.queryFrom === 'kitchen'">
+      <!-- 未接订单显示批量接受 -->
+      <Button type="default" v-if="params.orderStatus === 'WAITTING_ACCEPTED'" @click="batchAccepted">批量接受</Button>
+      <!-- 制作中订单显示批量完成 -->
+      <Button type="default" v-if="params.orderStatus === 'ACCEPTED'" @click="batchFinish">批量完成</Button>
+    </Row>
     <Row style="margin-top: 10px">
-      <Table border ref="selection" :columns="columns" :data="orderList" :loading="loading"></Table>
+      <Table border ref="selection" :columns="columns" :data="orderList" :loading="loading" @on-selection-change="updateSelections">
+      </Table>
     </Row>
     <Row style="margin-top: 10px">
       <Col span="8" offset="8">
@@ -72,7 +80,7 @@ import HeadSearch from './HeadSearch.vue'
 import RegionSelect from './RegionSelect.vue'
 export default {
   name: 'orders',
-  props: ['tabs', 'columns', 'type', 'expressCompanyList'],
+  props: ['tabs', 'columns', 'type', 'expressCompanyList', 'queryFrom'],
   components: {
     HeadSearch,
     RegionSelect
@@ -96,8 +104,9 @@ export default {
         startDate: null,
         endDate: null,
         // 订单类型
-        orderStatus: '',
+        orderStatus: this.queryFrom === 'kitchen' ? 'WAITTING_ACCEPTED' : '',
         type: this.type,
+        queryFrom: this.queryFrom,
         page: 1,
         pageSize: 10
       },
@@ -105,7 +114,8 @@ export default {
       total: 0,
       showExpress: false,
       expressParams: {},
-      currentOrder: {}
+      currentOrder: {},
+      selections: []
     }
   },
   created () {
@@ -113,28 +123,55 @@ export default {
     this.queryOrders()
   },
   methods: {
+    /**
+     * @name  获取当前省ID
+     * @param provinceId 当前选中省ID
+     */
     getCurrentProvince (provinceId) {
       this.params.provinceId = provinceId
     },
+    /**
+     * @name  获取当前市ID
+     * @param cityId 当前选中市ID
+     */
     getCurrentCity (cityId) {
       this.params.cityId = cityId
     },
+    /**
+     * @name  获取筛选时间区间
+     * @param daterange 当前选中时间区间
+     */
     getOrderDate (daterange) {
       this.params.startDate = daterange[0]
       this.params.endDate = daterange[1]
     },
+    /**
+     * @name  切换页码
+     * @param page  当前页码
+     */
     changePage (page) {
       this.params.page = page
       this.queryOrders()
     },
+    /**
+     * @name  切换每页显示数量
+     * @param pageSize  当前每页显示数量
+     */
     changePageSize (pageSize) {
       this.params.pageSize = pageSize
       this.queryOrders()
     },
+    /**
+     * @name  切换Tab
+     * @param name  当前激活Tab
+     */
     activeTab (name) {
       this.params.orderStatus = name
       this.queryOrders()
     },
+    /**
+     * @name  查询订单
+     */
     queryOrders () {
       this.loading = true
       this.$axios.get('/order/queryOrder', {
@@ -151,14 +188,21 @@ export default {
         console.log(err)
       })
     },
+    /**
+     * @name 显示物流模态框
+     * @param currentOrder 当前订单
+     */
     showExpressModal (currentOrder) {
       this.currentOrder = currentOrder
       this.showExpress = true
     },
+    /**
+     * @name 确认发货
+     */
     confirmDelivery () {
       this.expressParams.orderID = this.currentOrder.orderID
       this.$axios.post('/order/confirmDelivery', this.expressParams).then(res => {
-        if (res.data.code === -1) {
+        if (res.data.code !== 666) {
           this.$Message.warning(res.data.message)
         } else {
           this.queryOrders()
@@ -168,6 +212,41 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    /**
+     * @name  更新选中行
+     * @param selections  选中的行
+     */
+    updateSelections (selections) {
+      this.selections = selections
+    },
+    /**
+     * @name  批量接受订单
+     */
+    batchAccepted () {
+      if (!this.selections || this.selections.length === 0) {
+        this.$Message.warning('请选择订单')
+        return
+      }
+      let ids = []
+      for (const i in this.selections) {
+        ids.push(this.selections[i].orderID)
+      }
+      this.$emit('acceptOrders', ids)
+    },
+    /**
+     * @name  批量完成订单
+     */
+    batchFinish () {
+      if (!this.selections || this.selections.length === 0) {
+        this.$Message.warning('请选择订单')
+        return
+      }
+      let ids = []
+      for (const i in this.selections) {
+        ids.push(this.selections[i].orderID)
+      }
+      this.$emit('productionFinish', ids)
     }
   }
 }

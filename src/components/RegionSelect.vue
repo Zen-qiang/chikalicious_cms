@@ -2,12 +2,12 @@
   <div>
     <Row :gutter="16">
       <Col span="12">
-        <Select v-model="provinceId" filterable clearable @on-change="getCityListByProvince()" placeholder="请选择省份">
+        <Select v-model="provinceId" filterable clearable @on-change="getCityListByProvince()" placeholder="请选择省份" :disabled="provinceDisable">
           <Option v-for="item in provinceList" :value="item.id" :key="item.id">{{ item.value }}</Option>
         </Select>
       </Col>
       <Col span="12">
-        <Select v-model="cityId" filterable clearable @on-change="$emit('getCurrentCity', cityId)" placeholder="请选择城市">
+        <Select v-model="cityId" filterable clearable @on-change="$emit('getCurrentCity', cityId)" placeholder="请选择城市" :disabled="cityDisable">
           <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.value }}</Option>
         </Select>
       </Col>
@@ -17,12 +17,15 @@
 <script>
 export default {
   name: 'RegionSelect',
+  props: ['type'],
   data () {
     return {
       provinceId: -1,
       provinceList: [],
       cityId: -1,
-      cityList: []
+      cityList: [],
+      provinceDisable: this.type === 'SNACK' || false,
+      cityDisable: this.type === 'SNACK' || false
     }
   },
   created () {
