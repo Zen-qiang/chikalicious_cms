@@ -50,9 +50,13 @@ export default [
     ]
   },
   {
-    item: { title: '会员' },
+    item: { title: '统计' },
     subItems: [
-      { label: '会员管理', path: '/MemberManage', name: 'MemberManage' }
+      { label: '平台销量情况', path: '/PlatFromSaleCount', name: 'PlatFromSaleCount' },
+      { label: '蛋糕销售情况', path: '/CakeSaleCount', name: 'CakeSaleCount' },
+      { label: '零食销售情况', path: '/SnackSaleCount', name: 'SnackSaleCount' },
+      { label: '店铺销量统计', path: '/ShopSaleCount', name: 'ShopSaleCount' },
+      { label: '会员购买统计', path: '/MerberSaleCount', name: 'MerberSaleCount' }
     ]
   }
   // {

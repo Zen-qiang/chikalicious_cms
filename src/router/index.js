@@ -23,7 +23,12 @@ const ShopList = () => import(/* webpackChunkName: "group-order" */ '../pages/sh
 const ShopRegionManage = () => import(/* webpackChunkName: "group-order" */ '../pages/shop/shopRegionManage.vue')
 // 会员
 const MemberManage = () => import(/* webpackChunkName: "group-order" */ '../pages/merber/memberManage.vue')
-
+// 统计
+const PlatFromSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/platFromSaleCount.vue')
+const ShopSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/shopSaleCount.vue')
+const CakeSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/cakeSaleCount.vue')
+const SnackSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/snackSaleCount.vue')
+const MerberSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/merberSaleCount.vue')
 Vue.use(Router)
 
 export default new Router({
@@ -208,6 +213,52 @@ export default new Router({
           component: MemberManage,
           meta: {
             title: '会员管理',
+            requiresAuth: true
+          }
+        },
+        // 统计
+        {
+          path: '/CakeSaleCount',
+          name: 'CakeSaleCount',
+          component: CakeSaleCount,
+          meta: {
+            title: '蛋糕销量情况',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/SnackSaleCount',
+          name: 'SnackSaleCount',
+          component: SnackSaleCount,
+          meta: {
+            title: '零食销量情况',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/ShopSaleCount',
+          name: 'ShopSaleCount',
+          component: ShopSaleCount,
+          meta: {
+            title: '店铺销量统计',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/MerberSaleCount',
+          name: 'MerberSaleCount',
+          component: MerberSaleCount,
+          meta: {
+            title: '会员销量统计',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/PlatFromSaleCount',
+          name: 'PlatFromSaleCount',
+          component: PlatFromSaleCount,
+          meta: {
+            title: '平台收支情况',
             requiresAuth: true
           }
         }
