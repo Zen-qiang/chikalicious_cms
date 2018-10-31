@@ -29,6 +29,13 @@ const ShopSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pag
 const CakeSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/cakeSaleCount.vue')
 const SnackSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/snackSaleCount.vue')
 const MerberSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/merberSaleCount.vue')
+// 管理员列表
+const AdminAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/admin/admin_add.vue')
+const AdminList = () => import(/* webpackChunkName: "group-order" */ '../pages/admin/adminList.vue')
+// 网站
+const WebShopAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/webShopAdd.vue')
+const WebShopList = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/webShopList.vue')
+
 Vue.use(Router)
 
 export default new Router({
@@ -259,6 +266,44 @@ export default new Router({
           component: PlatFromSaleCount,
           meta: {
             title: '平台收支情况',
+            requiresAuth: true
+          }
+        },
+        // 管理员
+        {
+          path: '/AdminList',
+          name: 'AdminList',
+          component: AdminList,
+          meta: {
+            title: '管理员列表',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/AdminList/AdminAdd',
+          name: 'AdminAdd',
+          component: AdminAdd,
+          meta: {
+            title: '新增管理员',
+            requiresAuth: true
+          }
+        },
+        // 网站
+        {
+          path: '/WebShopList',
+          name: 'WebShopList',
+          component: WebShopList,
+          meta: {
+            title: '店铺',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/WebShopList/WebShopAdd',
+          name: 'WebShopAdd',
+          component: WebShopAdd,
+          meta: {
+            title: '新增店铺',
             requiresAuth: true
           }
         }

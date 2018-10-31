@@ -177,7 +177,7 @@ export default {
           }).catch(err => {
             this.loading = false
             console.log(err)
-            this.$Message.error('登陆失败')
+            this.$Message.error('删除失败')
           })
         }
       })

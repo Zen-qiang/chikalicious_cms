@@ -58,6 +58,18 @@ export default [
       { label: '店铺销量统计', path: '/ShopSaleCount', name: 'ShopSaleCount' },
       { label: '会员购买统计', path: '/MerberSaleCount', name: 'MerberSaleCount' }
     ]
+  },
+  {
+    item: { title: '管理员管理' },
+    subItems: [
+      { label: '管理员列表', path: '/AdminList', name: 'AdminList' }
+    ]
+  },
+  {
+    item: { title: '网站' },
+    subItems: [
+      { label: '店铺', path: '/WebShopList', name: 'WebShopList' }
+    ]
   }
   // {
   //   item: { title: '订单' },
