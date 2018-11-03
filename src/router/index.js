@@ -33,9 +33,13 @@ const MerberSaleCount = () => import(/* webpackChunkName: "group-order" */ '../p
 const AdminAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/admin/admin_add.vue')
 const AdminList = () => import(/* webpackChunkName: "group-order" */ '../pages/admin/adminList.vue')
 // 网站
-const WebShopAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/webShopAdd.vue')
+const WebShopAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/webShop_add.vue')
 const WebShopList = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/webShopList.vue')
-
+const WebNewsManagrer = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/webNewsManagrer.vue')
+const WebNewsAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/webNews_add.vue')
+const WebArtManagrer = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/WebArtManagrer.vue')
+const WebArtAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/webArt_add.vue')
+const BannerManagrer = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/bannerManagrer.vue')
 Vue.use(Router)
 
 export default new Router({
@@ -304,6 +308,51 @@ export default new Router({
           component: WebShopAdd,
           meta: {
             title: '新增店铺',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/WebNewsManagrer',
+          name: 'WebNewsManagrer',
+          component: WebNewsManagrer,
+          meta: {
+            title: '新闻管理',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/WebNewsManagrer/WebNewsAdd',
+          name: 'WebNewsAdd',
+          component: WebNewsAdd,
+          meta: {
+            title: '新增新闻',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/WebArtManagrer',
+          name: 'WebArtManagrer',
+          component: WebArtManagrer,
+          meta: {
+            title: '艺术管理',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/WebArtManagrer/WebArtAdd',
+          name: 'WebArtAdd',
+          component: WebArtAdd,
+          meta: {
+            title: '艺术新闻',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/BannerManagrer',
+          name: 'BannerManagrer',
+          component: BannerManagrer,
+          meta: {
+            title: '首页',
             requiresAuth: true
           }
         }

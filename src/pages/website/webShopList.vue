@@ -18,7 +18,7 @@
         <Table border :loading="loading" :columns="columns" :data="shopDataInfo"></Table>
       </div>
       <div class="cakeNews-container-page">
-        <Page :total="total" :page-size="limit" :current="offset + 1" @on-change="pageChange" show-elevator />
+        <Page :total="total" :page-size="limit" size="small" show-elevator show-sizer show-total @on-change="changePage" @on-page-size-change="changePageSize"/>
       </div>
     </section>
   </div>
@@ -33,7 +33,7 @@
         <Table border :columns="regionSetColumns" :data="regionSetInfo"></Table>
       </div>
       <div class="cakeNews-container-page">
-        <Page :total="regionSetTotal" :page-size="regionSetLimit" :current="regionSetOffset + 1" @on-change="regionSetPageChange" show-elevator />
+        <Page :total="regionSetTotal" :page-size="regionSetLimit" size="small" show-elevator show-sizer show-total @on-change="regionChangePage" @on-page-size-change="regionChangePageSize"/>
       </div>
     </section>
     <Modal
@@ -401,24 +401,21 @@ export default {
         }
       })
     },
-    pageChange (index) {
-      this.offset = index - 1
+    changePage (page) {
+      this.offset = page
       this.getShopDataInfo()
     },
-    regionSetPageChange (index) {
-      this.regionSetOffset = index - 1
+    changePageSize (pageSize) {
+      this.limit = pageSize
       this.getShopDataInfo()
     },
-    getCurrentCity (data) {
-      this.cityId = data
-      this.getShopDataInfo()
+    regionChangePage (page) {
+      this.offset = page
+      this.getRegionSetShopDataInfo()
     },
-    getCurrentProvince (data) {
-      this.provinceId = data
-      this.getShopDataInfo()
-    },
-    getInputCurrentProvince (data) {
-
+    regionChangePageSize (pageSize) {
+      this.limit = pageSize
+      this.getRegionSetShopDataInfo()
     },
     getInputCurrentCity (data) {
       this.fkRegionId = data

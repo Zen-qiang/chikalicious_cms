@@ -16,21 +16,19 @@
         <Table border :loading="loading" :columns="columns" :data="shopDataInfo"></Table>
       </div>
       <div class="cakeNews-container-page">
-        <Page :total="total" :page-size="limit" :current="offset + 1" @on-change="pageChange" show-elevator />
+        <Page :total="total" :page-size="limit" size="small" show-elevator show-sizer show-total @on-change="changePage" @on-page-size-change="changePageSize"/>
       </div>
     </section>
     <Modal
         v-model="addProductTypeModel"
-        title="保存商品分类"
-        @on-ok="ok"
-        @on-cancel="cancel">
+        title="新建店铺">
         <p>
           <label>
             <span style="margin-right:10px;">店铺名称</span>
             <Input v-model="name" placeholder="请填写店铺名称" clearable style="width: 200px" />
           </label>
         </p>
-        <p>
+        <!-- <p>
           <label>
             <span style="margin-right:10px;">门店地址</span>
             <Input v-model="address" placeholder="门店地址" clearable style="width: 200px" />
@@ -41,14 +39,18 @@
             <span style="margin-right:10px;">联系电话</span>
             <Input v-model="contactNumber" placeholder="联系电话" clearable style="width: 200px" />
           </label>
-        </p>
+        </p> -->
         <br/>
         <p>
-          <label>
+          <label class="fx">
             <span style="margin-right:10px;">城市</span>
-                <region-select @getCurrentCity="getInputCurrentCity"></region-select>
+                <region-select @getCurrentCity="getInputCurrentCity" style="width:80%"></region-select>
             </label>
         </p>
+      <div slot="footer">
+          <Button type="text" size="large" @click="addProductTypeModel=false">取消</Button>
+          <Button type="primary" size="large" @click="ok">确定</Button>
+      </div>
       </Modal>
   </div>
 </template>
@@ -87,7 +89,7 @@ export default {
           width: 60,
           render: (h, params) => {
             return h('div', [
-              h('strong', 1 + params.index + this.offset * this.limit)
+              h('strong', 1 + params.index)
             ])
           }
         },
@@ -130,6 +132,11 @@ export default {
           }
         }
       ]
+    }
+  },
+  watch: {
+    addProductTypeModel (newVal, oldVal) {
+      if (!newVal) this.cancel()
     }
   },
   props: {
@@ -195,8 +202,20 @@ export default {
         }
       })
     },
-    pageChange (index) {
-      this.offset = index - 1
+    /**
+     * @name  切换页码
+     * @param page  当前页码
+     */
+    changePage (page) {
+      this.offset = page
+      this.getShopDataInfo()
+    },
+    /**
+     * @name  切换每页显示数量
+     * @param pageSize  当前每页显示数量
+     */
+    changePageSize (pageSize) {
+      this.limit = pageSize
       this.getShopDataInfo()
     },
     getCurrentCity (data) {
@@ -207,14 +226,11 @@ export default {
       this.provinceId = data
       this.getShopDataInfo()
     },
-    getInputCurrentProvince (data) {
-
-    },
     getInputCurrentCity (data) {
       this.fkRegionId = data
     },
     ok () {
-      if (this.$lodash.isNull(this.id) && this.$lodash.isNull(this.fkRegionId)) {
+      if (this.$lodash.isNull(this.fkRegionId)) {
         this.$Message.info('请选择城市')
       } else if (!this.name) {
         this.$Message.info('请补全表单')
@@ -225,15 +241,16 @@ export default {
           data: {
             id: this.id,
             fkRegionId: this.fkRegionId,
-            name: this.name,
-            address: this.address,
-            contactNumber: this.contactNumber
+            name: this.name
+            // address: this.address,
+            // contactNumber: this.contactNumber
           }
         }).then(result => {
           let code = result.data.code
           if (code === 666) {
             this.$Message.success('保存成功')
-            this.getProductTypeData()
+            this.addProductTypeModel = false
+            this.getShopDataInfo()
           } else {
             this.$Message.warning(result.data.message)
           }
@@ -242,7 +259,6 @@ export default {
           console.log(err)
           this.$Message.error('系统异常,请联系管理员')
         })
-        this.cancel()
       }
     },
     cancel () {

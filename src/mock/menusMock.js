@@ -18,7 +18,7 @@ export default [
     subItems: [
       { label: '蛋糕分类', path: '/CakeClassify', name: 'CakeClassify' },
       { label: '各地区蛋糕管理', path: '/CakeManage', name: 'CakeManage' },
-      { label: '各地区首页管理', path: '/CakeHomepages', name: 'CakeHomepages' },
+      // { label: '各地区首页管理', path: '/CakeHomepages', name: 'CakeHomepages' },
       { label: '新闻管理', path: '/CakeNews', name: 'CakeNews' },
       { label: '编辑新闻', path: '/CakeNews/CakeNewsAdd', name: 'CakeNewsAdd', children: true }
     ]
@@ -27,8 +27,8 @@ export default [
     item: { title: '零食' },
     subItems: [
       { label: '零食分类', path: '/SnacksClassify', name: 'SnacksClassify' },
-      { label: '各地区零食管理', path: '/SnacksManage', name: 'SnacksManage' },
-      { label: '各地区首页管理', path: '/SnacksHomepages', name: 'SnacksHomepages' }
+      { label: '各地区零食管理', path: '/SnacksManage', name: 'SnacksManage' }
+      // { label: '各地区首页管理', path: '/SnacksHomepages', name: 'SnacksHomepages' }
     ]
   },
   {
@@ -68,7 +68,10 @@ export default [
   {
     item: { title: '网站' },
     subItems: [
-      { label: '店铺', path: '/WebShopList', name: 'WebShopList' }
+      { label: '新闻管理', path: '/WebNewsManagrer', name: 'WebNewsManagrer' },
+      { label: '店铺', path: '/WebShopList', name: 'WebShopList' },
+      { label: '艺术管理', path: '/WebArtManagrer', name: 'WebArtManagrer' },
+      { label: '首页', path: '/BannerManagrer', name: 'BannerManagrer' }
     ]
   }
   // {
