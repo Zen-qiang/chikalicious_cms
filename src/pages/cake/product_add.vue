@@ -51,6 +51,7 @@
           ref="master"
           :show-upload-list="false"
           :on-success="handleSuccess"
+          :default-file-list="masterDefaultList"
           :format="['jpg','jpeg','png', 'bmp']"
           :max-size="1048"
           name="files"
@@ -87,6 +88,7 @@
           ref="images"
           :show-upload-list="false"
           :on-success="handleSuccess"
+          :default-file-list="imagesDefaultList"
           :format="['jpg','jpeg','png', 'bmp']"
           :max-size="1048"
           name="files"
@@ -108,7 +110,7 @@
     <Row class="row-container">
       <Col span="2"><p class="row-label">商品描述：</p></Col>
       <Col span="13">
-        <Editor :value='content' :isClear='isClear' @change="change"></Editor>
+        <Editor ref="editor" :value='content' :isClear='isClear' @change="change"></Editor>
       </Col>
     </Row>
     <Row class="row-container">
@@ -186,7 +188,9 @@ export default {
       uploadList: [],
       showPreview: false,
       previewObj: {},
-      previewUrl: ''
+      previewUrl: '',
+      masterDefaultList: [],
+      imagesDefaultList: []
     }
   },
   created () {
@@ -212,13 +216,30 @@ export default {
           let categoryIds = res.data.data.categoryIds
           let specificationIds = res.data.data.specificationIds
           let regionShops = res.data.data.regionShops
+          let images = res.data.data.images
           this.productName = product.name
           // refs
-          this.masterList.push({
+          // this.$refs.master.fileList.push({
+          //   name: 'masterImg',
+          //   url: product.image
+          // })
+          // 渲染顺序有问题
+          this.masterDefaultList.push({
             name: 'masterImg',
             url: product.image
           })
+          if (images && images.length > 0) {
+            for (let i in images) {
+              let name = images[i].substring(images[i].lastIndexOf('/') + 1, images[i].lastIndexOf('.'))
+              this.imagesDefaultList.push({
+                name: name,
+                url: images[i]
+              })
+            }
+          }
+          // 商品描述
           this.content = product.content
+          this.$refs.editor.setValue(product.content)
           // 回显分类
           if (categoryIds && categoryIds.length > 0) {
             for (let i in categoryIds) {
@@ -489,13 +510,13 @@ export default {
     }
   },
   mounted () {
-    this.masterList = this.$refs.master.fileList
-    this.uploadList = this.$refs.images.fileList
     if (this.id) {
       this.getProductInfoById(this.id)
     } else {
       this.regionList.push({})
     }
+    this.masterList = this.$refs.master.fileList
+    this.uploadList = this.$refs.images.fileList
   }
 }
 </script>

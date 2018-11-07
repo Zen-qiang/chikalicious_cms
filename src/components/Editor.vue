@@ -107,6 +107,11 @@ export default {
       // 创建富文本编辑器
       this.editor.create()
       this.editor.txt.html(this.value)
+    },
+    setValue (val) {
+      if (this.editor) {
+        this.editor.txt.html(val)
+      }
     }
   }
 }
