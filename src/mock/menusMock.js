@@ -18,17 +18,18 @@ export default [
     subItems: [
       { label: '蛋糕分类', path: '/CakeClassify', name: 'CakeClassify' },
       { label: '各地区蛋糕管理', path: '/CakeManage', name: 'CakeManage' },
-      { label: '各地区首页管理', path: '/CakeHomepages', name: 'CakeHomepages' },
+      // { label: '各地区首页管理', path: '/CakeHomepages', name: 'CakeHomepages' },
       { label: '新闻管理', path: '/CakeNews', name: 'CakeNews' },
-      { label: '编辑新闻', path: '/CakeNews/CakeNewsAdd', name: 'CakeNewsAdd', children: true }
+      { label: '编辑新闻', path: '/CakeNews/CakeNewsAdd', name: 'CakeNewsAdd', children: true },
+      { label: '新增/修改商品', path: '/CakeManage/ProductAdd', name: 'ProductAdd', children: true }
     ]
   },
   {
     item: { title: '零食' },
     subItems: [
       { label: '零食分类', path: '/SnacksClassify', name: 'SnacksClassify' },
-      { label: '各地区零食管理', path: '/SnacksManage', name: 'SnacksManage' },
-      { label: '各地区首页管理', path: '/SnacksHomepages', name: 'SnacksHomepages' }
+      { label: '各地区零食管理', path: '/SnacksManage', name: 'SnacksManage' }
+      // { label: '各地区首页管理', path: '/SnacksHomepages', name: 'SnacksHomepages' }
     ]
   },
   {

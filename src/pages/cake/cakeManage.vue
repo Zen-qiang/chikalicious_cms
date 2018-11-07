@@ -34,7 +34,7 @@
       </head-search>
       </div>
       <div>
-        <Button type="primary" icon="md-add" >添加商品</Button>
+        <Button type="success" icon="md-add" :to="{name: 'ProductAdd', params: {type: 'CAKE'}}">添加商品</Button>
         <Button type="error" @click="deleteProductByIds()" >批量{{productTypeText}}商品</Button>
       </div>
       <div class="cakeNews-container-content">
@@ -161,7 +161,9 @@ export default {
                   this.$router.push({
                     name: 'ProductAdd',
                     params: {
-                      id: params.row.id
+                      id: params.row.id,
+                      cityId: params.row.cityId,
+                      type: 'CAKE'
                     }
                   })
                 }

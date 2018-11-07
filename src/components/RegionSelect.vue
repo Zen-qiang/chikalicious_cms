@@ -2,12 +2,12 @@
   <div>
     <Row :gutter="16">
       <Col span="12">
-        <Select v-model="provinceId" filterable clearable @on-change="getCityListByProvince()" placeholder="请选择省份" :disabled="provinceDisable">
+        <Select v-model="provinceId" filterable clearable @on-change="getCityListByProvince()" placeholder="请选择省份" :disabled="provinceDisable" :transfer="true">
           <Option v-for="item in provinceList" :value="item.id" :key="item.id">{{ item.value }}</Option>
         </Select>
       </Col>
       <Col span="12">
-        <Select v-model="cityId" filterable clearable @on-change="$emit('getCurrentCity', cityId)" placeholder="请选择城市" :disabled="cityDisable">
+        <Select v-model="cityId" filterable clearable @on-change="returnCurrentCity(cityId, index)" placeholder="请选择城市" :disabled="cityDisable" :transfer="true">
           <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.value }}</Option>
         </Select>
       </Col>
@@ -17,7 +17,31 @@
 <script>
 export default {
   name: 'RegionSelect',
-  props: ['type'],
+  // props: ['type', 'index'],
+  props: {
+    type: {
+      type: String
+    },
+    index: {
+      type: Number
+    },
+    pid: {
+      type: Number,
+      default: -1
+    },
+    cid: {
+      type: Number,
+      default: -1
+    }
+  },
+  watch: {
+    provinceId: function (n, o) {
+      this.getCityListByProvince()
+    },
+    cityId: function (n, o) {
+      this.returnCurrentCity(n, this.index)
+    }
+  },
   data () {
     return {
       provinceId: -1,
@@ -33,10 +57,7 @@ export default {
   },
   methods: {
     getProvinceList () {
-      this.$axios.get('/common/queryRegionByRole', {
-        params: {
-        }
-      }).then(res => {
+      this.$axios.get('/common/queryRegionByRole', {}).then(res => {
         if (res.data.code === 666) {
           this.provinceList = res.data.data
         }
@@ -44,7 +65,11 @@ export default {
         console.log(err)
       })
     },
+    returnCurrentCity (cityId, index) {
+      this.$emit('getCurrentCity', cityId, index)
+    },
     getCityListByProvince () {
+      this.cityList = []
       this.$emit('getCurrentProvince', this.provinceId)
       this.$axios.get('/common/queryCityIdByProvinceId', {
         params: {
@@ -53,11 +78,16 @@ export default {
       }).then(res => {
         if (res.data.code === 666) {
           this.cityList = res.data.data
+          this.cityId = this.cid
+          // this.$emit('getCurrentCity', this.cityId, this.index)
         }
       }).catch(err => {
         console.log(err)
       })
     }
+  },
+  mounted () {
+    this.provinceId = this.pid
   }
 }
 </script>

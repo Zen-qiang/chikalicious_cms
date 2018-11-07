@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     getPorductTypeList () {
-      this.$axios.get('/product/queryProductTypeByListId', {
+      this.$axios.get('/product/queryProductCategoryByType', {
         params: {
           type: this.productType
           // provinceId: 34,

@@ -117,8 +117,8 @@ export default {
             url: '/shop/saveShop',
             method: 'post',
             data: formData,
-            processData:false,
-            contentType:false,
+            processData: false,
+            contentType: false,
             headers: {'Content-Type': 'multipart/form-databoundary=21'}
           }).then(result => {
             let code = result.data.code

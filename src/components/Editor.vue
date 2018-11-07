@@ -44,10 +44,13 @@ export default {
   methods: {
     seteditor () {
       this.editor = new E(this.$refs.toolbar, this.$refs.editor)
-      this.editor.customConfig.uploadImgShowBase64 = true // base 64 存储图片
-      this.editor.customConfig.uploadImgServer = 'http://lochost:5888/us/' // 配置服务器端地址
+      this.editor.customConfig.debug = true
+      this.editor.customConfig.withCredentials = true
+      this.editor.customConfig.zIndex = 100
+      // this.editor.customConfig.uploadImgShowBase64 = true // base 64 存储图片
+      this.editor.customConfig.uploadImgServer = 'http://localhost:5888/common/uploadPicture' // 配置服务器端地址
       this.editor.customConfig.uploadImgHeaders = {} // 自定义 header
-      this.editor.customConfig.uploadFileName = '' // 后端接受上传文件的参数名
+      this.editor.customConfig.uploadFileName = 'files' // 后端接受上传文件的参数名
       this.editor.customConfig.uploadImgMaxSize = 2 * 1024 * 1024 // 将图片大小限制为 2M
       this.editor.customConfig.uploadImgMaxLength = 6 // 限制一次最多上传 3 张图片
       this.editor.customConfig.uploadImgTimeout = 3 * 60 * 1000 // 设置超时时间
@@ -89,6 +92,12 @@ export default {
         },
         customInsert: (insertImg, result, editor) => {
         // 图片上传成功，插入图片的回调
+          // console.log(result.data[0])
+          if (result && result.errno === 0) {
+            for (let i in result.data) {
+              insertImg(result.data[i])
+            }
+          }
         }
       }
       this.editor.customConfig.onchange = (html) => {
