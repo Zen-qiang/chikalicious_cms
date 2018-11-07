@@ -1,25 +1,19 @@
 <template>
   <div class="cakeNews">
-    <div class="cakeNews-searchContent fx">
-      <p>地址:</p>
-      <p><region-select @getCurrentCity="getCurrentCity" @getCurrentProvince="getCurrentProvince"></region-select></p>
-    </div>
-    <section class="cakeNews-container" style="margin-top:30px">
       <div>
         <Button type="primary" icon="md-add" @click="addProductTypeModel = true" >添加商品分类</Button>
       </div>
+    <section class="cakeNews-container" style="margin-top:30px">
       <div class="cakeNews-container-content">
         <Table border :loading="loading" :columns="columns" :data="productTypeDate"></Table>
       </div>
       <div class="cakeNews-container-page">
-        <Page :total="total" :page-size="limit" :current="offset + 1" @on-change="pageChange" show-elevator />
+        <Page :total="total" :page-size="limit" size="small" show-elevator show-sizer show-total @on-change="changePage" @on-page-size-change="changePageSize"/>
       </div>
     </section>
     <Modal
         v-model="addProductTypeModel"
-        title="保存商品分类"
-        @on-ok="ok"
-        @on-cancel="cancel">
+        title="保存商品分类">
         <p>
           <label>
             <span style="margin-right:10px;">分类名称</span>
@@ -33,22 +27,22 @@
             <Input v-model="seq" placeholder="请填写序号" clearable style="width: 200px" />
             </label>
         </p>
+        <div slot="footer">
+          <Button type="text" size="large" @click="addProductTypeModel=false">取消</Button>
+          <Button type="primary" size="large" @click="ok">确定</Button>
+        </div>
       </Modal>
   </div>
 </template>
 <script>
-import RegionSelect from '../../components/RegionSelect.vue'
 import { notBlank } from '../../mixin/mixin'
 export default {
-  name: 'cakeNews',
+  name: 'classify',
   components: {
-    RegionSelect
   },
   mixins: [notBlank],
   data () {
     return {
-      provinceId: null,
-      cityId: null,
       productTypeDate: [],
       ids: [],
       total: 0,
@@ -128,19 +122,21 @@ export default {
       required: false
     }
   },
+  watch: {
+    addProductTypeModel (newVal, oldVal) {
+      if (!newVal) this.cancel()
+    }
+  },
   created () {
     this.getProductTypeData()
   },
   methods: {
     getProductTypeData () {
       this.loading = true
-      this.$axios.get('/product/queryProductTypeByRegionId', {
+      this.$axios.get('/product/queryProductType', {
         params: {
           offset: this.offset,
           limit: this.limit,
-          provinceId: this.provinceId ? this.provinceId : null,
-          // provinceId: 34,
-          cityId: this.cityId ? this.cityId : null,
           type: this.productType
         }
       }).then(res => {
@@ -182,44 +178,41 @@ export default {
         }
       })
     },
-    pageChange (index) {
-      this.offset = index - 1
+    changePage (page) {
+      this.offset = page - 1
+      this.getProductTypeData()
+    },
+    changePageSize (pageSize) {
+      this.limit = pageSize
       this.getProductTypeData()
     },
     getCurrentCity (data) {
-      this.cityId = data
-      this.getProductTypeData()
-    },
-    getCurrentProvince (data) {
-      this.provinceId = data
+      this.cityId = data + ''
       this.getProductTypeData()
     },
     ok () {
-      if (this.$lodash.isNull(this.id) && this.$lodash.isNull(this.cityId)) {
-        this.$Message.info('请选择城市')
-      } else if (!this.typeName && !this.seq) {
+      if (!this.typeName && !this.seq) {
         this.$Message.info('请补全表单')
       } else {
         this.$axios({
-          url: '/product/saveRegoinProductType',
+          url: '/product/saveProductType',
           method: 'post',
           data: {
             id: this.id,
             value: this.typeName,
             seq: this.seq,
-            type: this.productType,
-            cityId: this.cityId
+            type: this.productType
           }
         }).then(result => {
           let code = result.data.code
           if (code === 666) {
             this.$Message.success('保存成功')
             this.getProductTypeData()
+            this.addProductTypeModel = false
           } else {
             this.$Message.warning(result.data.message)
           }
         }).catch(err => {
-          this.loading = false
           console.log(err)
           this.$Message.error('系统异常,请联系管理员')
         })

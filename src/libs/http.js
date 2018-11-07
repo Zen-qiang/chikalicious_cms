@@ -5,7 +5,7 @@ import router from '../router'
 axios.defaults.timeout = 30000
 // 配置请求头
 // axios.defaults.headers.post['Content-Type'] = 'application/json'
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 // axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded'
 // 添加凭证
 axios.defaults.withCredentials = true
@@ -18,7 +18,9 @@ axios.interceptors.request.use(
   config => {
     // 修改了axios的post调用方法，将post参数转化成键值对
     if (config.method === 'post' || config.method === 'put') {
-      config.data = qs.stringify(config.data)
+      if (config.headers['Content-Type'] !== 'multipart/form-data') {
+        config.data = qs.stringify(config.data)
+      }
     }
     return config
   },

@@ -69,7 +69,10 @@ export default [
   {
     item: { title: '网站' },
     subItems: [
-      { label: '店铺', path: '/WebShopList', name: 'WebShopList' }
+      { label: '新闻管理', path: '/WebNewsManagrer', name: 'WebNewsManagrer' },
+      { label: '店铺', path: '/WebShopList', name: 'WebShopList' },
+      { label: '艺术管理', path: '/WebArtManagrer', name: 'WebArtManagrer' },
+      { label: '首页', path: '/BannerManagrer', name: 'BannerManagrer' }
     ]
   }
   // {

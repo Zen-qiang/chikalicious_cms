@@ -29,7 +29,7 @@ export default {
       isClear: false,
       formInline: {
         title: '',
-        file: null,
+        file: '',
         content: '',
         id: ''
       },
@@ -51,6 +51,7 @@ export default {
   },
   methods: {
     change (data) {
+      console.log(data)
       this.formInline.content = data
     },
     getNewInfo () {
@@ -60,13 +61,13 @@ export default {
           id: this.routerParams
         }
       }).then(res => {
+        console.log(res.data)
         // this.loading = false
         if (res.data.code === 666) {
           this.formInline.title = res.data.data.title
           this.formInline.file = res.data.data.surfacePlot
           this.formInline.content = res.data.data.content
           this.formInline.id = res.data.data.id
-          this.src = res.data.data.surfacePlot
         }
       }).catch(err => {
         console.log(err)
@@ -88,14 +89,16 @@ export default {
         formData.append('file', this.formInline.file)
         formData.append('content', this.formInline.content)
         console.log(formData.get('file'))
-        if (this.formInline.file === null) {
-          this.$Message.error('请选择文件!')
-        } else if (valid) {
+        if (valid) {
           this.$axios({
             url: '/product/saveNews',
             method: 'post',
-            headers: {'Content-Type': 'multipart/form-data'},
-            data: formData
+            data: {
+              id: this.formInline.id,
+              title: this.formInline.title,
+              content: this.formInline.content
+            }
+            // headers: {'Content-Type': 'multipart/form-databoundary=21'}
           }).then(result => {
             let code = result.data.code
             if (code === 666) {

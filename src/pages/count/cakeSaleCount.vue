@@ -56,7 +56,7 @@ export default {
         width: 60,
         render: (h, params) => {
           return h('div', [
-            h('strong', 1 + params.index + this.page * this.pageSize)
+            h('strong', 1 + params.index)
           ])
         }
       },

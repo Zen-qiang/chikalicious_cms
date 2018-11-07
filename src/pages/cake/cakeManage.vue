@@ -41,20 +41,27 @@
         <Table border @on-selection-change='selectionClick' ref="selection" :loading="loading" :columns="columns" :data="ProductData"></Table>
       </div>
       <div class="cakeNews-container-page">
-        <Page :total="total" :page-size="limit" :current="offset + 1" @on-change="pageChange" show-elevator />
+        <Page :total="total" :page-size="limit" size="small" show-elevator show-sizer show-total @on-change="changePage" @on-page-size-change="changePageSize"/>
       </div>
     </section>
     <Modal
         v-model="recommendTypeModel"
-        title="选择推荐类型"
-        @on-ok="ok"
-        @on-cancel="cancel">
+        title="选择推荐类型">
         <p>
           <RadioGroup v-model="recommendType">
             <Radio label="5">新品推荐</Radio>
             <Radio label="6">人气爆款</Radio>
           </RadioGroup>
         </p>
+        <br/>
+        <p>
+          推荐商品图片:<input id='fileinput' style='display:block' @change='uploading($event)' type='file' accept='image/*' />
+          <img :src='src' :style="{width: src ? '100px' : '', height: src ? '100px' : ''}"/>
+        </p>
+        <div slot="footer">
+          <Button type="text" size="large" @click="recommendTypeModel=false">取消</Button>
+          <Button type="primary" size="large" @click="ok">确定</Button>
+      </div>
       </Modal>
   </div>
 </template>
@@ -91,6 +98,8 @@ export default {
       productTypeSelect: '',
       recommendType: null,
       recommendTypeModel: false,
+      src: '',
+      file: null,
       columns: [{
         type: 'selection',
         width: 60,
@@ -102,7 +111,7 @@ export default {
         align: 'center',
         width: 60,
         render: (h, params) => {
-          return h('div', [h('strong', 1 + params.index + this.offset * this.limit)])
+          return h('div', [h('strong', 1 + params.index)])
         }
       },
       {
@@ -212,6 +221,11 @@ export default {
   created () {
     this.getProductData()
   },
+  watch: {
+    recommendTypeModel (val) {
+      if (!val) this.cancel()
+    }
+  },
   methods: {
     search () {
       this.offset = 0
@@ -251,7 +265,7 @@ export default {
             url: '/product/updateProductStatusById',
             method: 'post',
             data: {
-              _method: 'put',
+              // _method: 'put',
               id: id,
               type: type
             }
@@ -271,16 +285,26 @@ export default {
         }
       })
     },
-    pageChange (index) {
-      this.offset = index - 1
+    uploading (event) {
+      // 获取文件
+      var windowURL = window.URL || window.webkitURL
+      this.file = event.target.files[0] // 创建图片文件的url
+      this.src = windowURL.createObjectURL(event.target.files[0])
+    },
+    changePage (page) {
+      this.offset = page
+      this.getProductData()
+    },
+    changePageSize (pageSize) {
+      this.limit = pageSize
       this.getProductData()
     },
     getCurrentCity (data) {
-      this.cityId = data
+      this.cityId = data + ''
       this.getProductData()
     },
     getCurrentProvince (data) {
-      this.provinceId = data
+      this.provinceId = data + ''
       this.getProductData()
     },
     changeIsIndexSatus (status) {
@@ -337,25 +361,30 @@ export default {
     ok () {
       if (this.$lodash.isNull(this.recommendType)) {
         this.$Message.info('请选择推荐类型')
+      } else if (this.$lodash.isNull(this.file)) {
+        this.$Message.info('请选择文件')
       } else {
+        let form = new FormData()
+        // form.append('_method','put')
+        form.append('id', this.id)
+        form.append('type', this.id)
+        form.append('file', this.file)
         this.$axios({
           url: '/product/updateProductStatusById',
+          headers: {'Content-Type': 'multipart/form-data'},
           method: 'post',
-          data: {
-            _method: 'put',
-            id: this.id,
-            type: this.recommendType
-          }
+          data: form
         }).then(result => {
           let code = result.data.code
           if (code === 666) {
             this.$Message.success('推荐上首页成功')
+            this.recommendTypeModel = false
             this.getProductData()
           } else {
             this.$Message.warning(result.data.message)
           }
         }).catch(err => {
-          this.loading = false
+          // this.loading = false
           console.log(err)
           this.$Message.error('操作失败')
         })
@@ -363,6 +392,8 @@ export default {
     },
     cancel () {
       this.recommendType = null
+      this.file = null
+      this.src = null
     }
   }
 }
