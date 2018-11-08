@@ -9,24 +9,37 @@
             <Button type="primary" v-show="index === 1" @click="deleteItem(index)" shape="circle" icon="md-remove-circle"></Button>
            </Col>
         </Row>
-          <editor :isClear='isClear' :value='content' ></editor>
+          <editor :isClear='isClear' :value='content' @change="change" ></editor>
           <Button type='primary' @click="handleSubmit('formInline')">保存</Button>
+          <Button type="primary" @click="showPreview = true">预览</Button>
+          <preview :imgs="imgs" :content="content" :showPreview.sync="showPreview"></preview>
   </div>
 </template>
 <script>
 import Editor from '../../components/Editor.vue'
+import Preview from '../../components/Preview'
 export default {
   components: {
-    Editor
+    Editor,
+    Preview
   },
   data () {
     return {
       addressForm: [{src: null, file: null}],
       isClear: false,
-      content: null
+      content: null,
+      showPreview: false
+    }
+  },
+  computed: {
+    imgs () {
+      return this.$lodash.map(this.addressForm, 'src')
     }
   },
   methods: {
+    change (data) {
+      this.content = data
+    },
     uploading (event, index) {
       // 获取文件
       var windowURL = window.URL || window.webkitURL
