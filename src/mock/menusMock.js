@@ -72,7 +72,9 @@ export default [
       { label: '新闻管理', path: '/WebNewsManagrer', name: 'WebNewsManagrer' },
       { label: '店铺', path: '/WebShopList', name: 'WebShopList' },
       { label: '艺术管理', path: '/WebArtManagrer', name: 'WebArtManagrer' },
-      { label: '首页', path: '/BannerManagrer', name: 'BannerManagrer' }
+      { label: '首页', path: '/BannerManagrer', name: 'BannerManagrer' },
+      { label: '联系我们', path: '/LinkUs', name: 'LinkUs' },
+      { label: '关于我们', path: '/AboutUs', name: 'AboutUs' }
     ]
   }
   // {

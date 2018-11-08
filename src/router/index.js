@@ -40,6 +40,9 @@ const WebNewsAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/w
 const WebArtManagrer = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/WebArtManagrer.vue')
 const WebArtAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/webArt_add.vue')
 const BannerManagrer = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/bannerManagrer.vue')
+const LinkUs = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/linkUs.vue')
+const AboutUs = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/aboutUs.vue')
+
 Vue.use(Router)
 
 export default new Router({
@@ -353,6 +356,24 @@ export default new Router({
           component: BannerManagrer,
           meta: {
             title: '首页',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/LinkUs',
+          name: 'LinkUs',
+          component: LinkUs,
+          meta: {
+            title: '联系我们',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/AboutUs',
+          name: 'AboutUs',
+          component: AboutUs,
+          meta: {
+            title: '关于我们',
             requiresAuth: true
           }
         }
