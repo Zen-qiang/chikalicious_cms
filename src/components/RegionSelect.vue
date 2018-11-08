@@ -60,6 +60,10 @@ export default {
       this.$axios.get('/common/queryRegionByRole', {}).then(res => {
         if (res.data.code === 666) {
           this.provinceList = res.data.data
+          if (this.provinceList && this.provinceList.length) {
+            console.log('provinceList loaded, set value')
+            this.provinceId = this.pid
+          }
         }
       }).catch(err => {
         console.log(err)
@@ -69,6 +73,7 @@ export default {
       this.$emit('getCurrentCity', cityId, index)
     },
     getCityListByProvince () {
+      // this.cityId = null
       this.cityList = []
       this.$emit('getCurrentProvince', this.provinceId)
       this.$axios.get('/common/queryCityIdByProvinceId', {
@@ -78,7 +83,10 @@ export default {
       }).then(res => {
         if (res.data.code === 666) {
           this.cityList = res.data.data
-          this.cityId = this.cid
+          if (this.cityList && this.cityList.length) {
+            console.log('cityList loaded, set value')
+            this.cityId = this.cid
+          }
           // this.$emit('getCurrentCity', this.cityId, this.index)
         }
       }).catch(err => {
@@ -87,7 +95,7 @@ export default {
     }
   },
   mounted () {
-    this.provinceId = this.pid
+    // this.provinceId = this.pid
   }
 }
 </script>

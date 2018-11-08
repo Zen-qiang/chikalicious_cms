@@ -219,21 +219,27 @@ export default {
           let images = res.data.data.images
           this.productName = product.name
           // refs
-          // this.$refs.master.fileList.push({
+          this.$refs.master.fileList.push({
+            name: 'masterImg',
+            status: 'finished',
+            url: product.image
+          })
+          // 渲染顺序有问题
+          // this.masterDefaultList.push({
           //   name: 'masterImg',
           //   url: product.image
           // })
-          // 渲染顺序有问题
-          this.masterDefaultList.push({
-            name: 'masterImg',
-            url: product.image
-          })
           if (images && images.length > 0) {
             for (let i in images) {
               let name = images[i].substring(images[i].lastIndexOf('/') + 1, images[i].lastIndexOf('.'))
-              this.imagesDefaultList.push({
+              // this.imagesDefaultList.push({
+              //   name: name,
+              //   url: images[i]
+              // })
+              this.$refs.images.fileList.push({
                 name: name,
-                url: images[i]
+                url: images[i],
+                status: 'finished'
               })
             }
           }
@@ -452,11 +458,11 @@ export default {
         this.$Message.error('商品发布方式不能为空')
         return
       }
-      if (this.masterList && this.masterList.length === 0) {
+      if (this.masterList || this.masterList.length === 0) {
         this.$Message.error('商品主图不能为空')
         return
       }
-      if (this.uploadList && this.uploadList.length === 0) {
+      if (this.uploadList || this.uploadList.length === 0) {
         this.$Message.error('商品图片不能为空')
         return
       }
