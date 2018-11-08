@@ -290,33 +290,37 @@ export default {
       }
     },
     deleteProductByIds () {
-      this.$Modal.confirm({
-        title: '确定' + this.productTypeText + '所选商品吗？',
-        onOk: () => {
-          this.$axios({
-            url: '/product/deleteProductByIds',
-            method: 'post',
-            data: {
-              _method: 'delete',
-              idsString: JSON.stringify(this.ids),
-              // 2为下架 7为删除
-              type: this.productType === 1 ? '2' : '7'
-            }
-          }).then(result => {
-            let code = result.data.code
-            if (code === 666) {
-              this.$Message.success(this.productTypeText + '成功')
-              this.getProductData()
-            } else {
-              this.$Message.warning(result.data.message)
-            }
-          }).catch(err => {
-            this.loading = false
-            console.log(err)
-            this.$Message.error('登陆失败')
-          })
-        }
-      })
+      if (this.ids === null || this.ids.length === 0) {
+        this.$Message.error('请至少选中一行')
+      } else {
+        this.$Modal.confirm({
+          title: '确定' + this.productTypeText + '所选商品吗？',
+          onOk: () => {
+            this.$axios({
+              url: '/product/deleteProductByIds',
+              method: 'post',
+              data: {
+                _method: 'delete',
+                idsString: JSON.stringify(this.ids),
+                // 2为下架 7为删除
+                type: this.productType === 1 ? '2' : '7'
+              }
+            }).then(result => {
+              let code = result.data.code
+              if (code === 666) {
+                this.$Message.success(this.productTypeText + '成功')
+                this.getProductData()
+              } else {
+                this.$Message.warning(result.data.message)
+              }
+            }).catch(err => {
+              this.loading = false
+              console.log(err)
+              this.$Message.error('操作失败')
+            })
+          }
+        })
+      }
     }
   }
 }
