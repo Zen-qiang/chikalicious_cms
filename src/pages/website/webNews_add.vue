@@ -1,32 +1,37 @@
 <template>
   <div>
-    <Form ref='formInline' :model='formInline' :rules='ruleInline'>
-      <FormItem prop='title'>
+    <Form ref='formInline' :model='formInline' :rules='ruleInline' :label-width="80">
+      <FormItem prop='title' label="标题">
         <Input type='text' v-model='formInline.title' placeholder='title' />
       </FormItem>
-      <FormItem>
+      <FormItem label="封面图">
         <input id='fileinput' style='display:block' @change='uploading($event)' type='file' accept='image/*' />
         <img :src='src' :style="{width: src ? '100px' : '', height: src ? '100px' : ''}"/>
       </FormItem>
-        <FormItem>
+        <FormItem  label="新闻内容">
           <editor :value='formInline.content' :isClear='isClear' @change="change"></editor>
       </FormItem>
       <FormItem>
           <Button type='primary' @click="handleSubmit('formInline')">保存</Button>
+          <Button type="primary" @click="toShowPreview()">预览</Button>
+          <preview :imgs="imgs" :title="formInline.title" :content="formInline.content" :showPreview.sync="showPreview"></preview>
       </FormItem>
     </Form>
   </div>
 </template>
 <script>
 import Editor from '../../components/Editor.vue'
+import Preview from '../../components/Preview'
 export default {
   components: {
-    Editor
+    Editor,
+    Preview
   },
   data () {
     return {
-      src: '',
+      src: null,
       isClear: false,
+      showPreview: false,
       formInline: {
         title: '',
         file: '',
@@ -47,12 +52,22 @@ export default {
   computed: {
     routerParams () {
       return this.$route.params.id
+    },
+    imgs () {
+      return this.$lodash.map([{src: this.src}], 'src')
     }
   },
   methods: {
     change (data) {
       console.log(data)
       this.formInline.content = data
+    },
+    toShowPreview () {
+      if (this.src === null) {
+        this.$Message.warning('至少需要一张图片')
+      } else {
+        this.showPreview = true
+      }
     },
     getNewInfo () {
       // this.loading = true
@@ -68,6 +83,7 @@ export default {
           this.formInline.file = res.data.data.surfacePlot
           this.formInline.content = res.data.data.content
           this.formInline.id = res.data.data.id
+          this.src = res.data.data.surfacePlot
         }
       }).catch(err => {
         console.log(err)
@@ -86,24 +102,20 @@ export default {
         let formData = new FormData()
         formData.append('id', this.formInline.id)
         formData.append('title', this.formInline.title)
-        formData.append('file', this.formInline.file)
+        formData.append('surfacePlotFile', this.formInline.file)
         formData.append('content', this.formInline.content)
-        console.log(formData.get('file'))
+        formData.append('type', 'NEWS')
         if (valid) {
           this.$axios({
             url: '/product/saveNews',
             method: 'post',
-            data: {
-              id: this.formInline.id,
-              title: this.formInline.title,
-              content: this.formInline.content
-            }
-            // headers: {'Content-Type': 'multipart/form-databoundary=21'}
+            headers: {'Content-Type': 'multipart/form-data'},
+            data: formData
           }).then(result => {
             let code = result.data.code
             if (code === 666) {
               this.$Message.success('保存成功')
-              this.$router.replace('/CakeNews')
+              this.$router.replace('/WebNewsManagrer')
             } else {
               this.$Message.warning(result.data.message)
             }

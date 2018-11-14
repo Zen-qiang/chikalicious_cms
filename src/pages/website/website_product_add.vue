@@ -15,19 +15,9 @@
     <Row class="row-container">
       <Col span="2"><p class="row-label">商品规格：</p></Col>
       <Col span="12">
-        <Row class="row-container" v-for="(spec, index) in specList" :key="index">
-          <Col span="6">
-            <i-switch v-model="specList[index].checked" /><span style="margin-left: 10px">{{spec.value}}</span>
-          </Col>
-          <Col span="6">
-            <span>原价(元)：</span>
-            <InputNumber :disabled="!specList[index].checked" :max="100000" v-model="specList[index].originalPrice" :min="0"></InputNumber>
-          </Col>
-          <Col span="6">
-            <span>优惠价(元)：</span>
-            <InputNumber :disabled="!specList[index].checked" :max="100000" v-model="specList[index].preferentialPrice" :min="0"></InputNumber>
-          </Col>
-        </Row>
+        <CheckboxGroup v-model="fkSpecificationId">
+          <Checkbox v-for="spec in specList" :label="spec.id" :key="spec.id" style="margin-right:20px">{{spec.value}}</Checkbox>
+        </CheckboxGroup>
       </Col>
     </Row>
     <Row class="row-container" style="height:140px">
@@ -62,6 +52,43 @@
           action="http://localhost:5888/common/uploadPicture"
           style="display: inline-block;width:116px;">
           <div style="width: 116px;height:116px;line-height: 116px;" v-if="masterList.length < 1">
+            <Icon type="ios-camera" size="50"></Icon>
+          </div>
+        </Upload>
+      </Col>
+    </Row>
+    <Row class="row-container" style="height:140px">
+      <Col span="2">
+        <p class="row-label">hover图：</p>
+      </Col>
+      <Col span="12">
+        <div class="demo-upload-list" v-for="(item, index) in hoverList" :key="index">
+          <template v-if="item.status === 'finished'">
+            <img :src="item.url">
+            <div class="demo-upload-list-cover">
+              <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+              <Icon type="ios-trash-outline" @click.native="handleRemove(item, $refs.hover.fileList)"></Icon>
+            </div>
+          </template>
+          <template v-else>
+            <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+          </template>
+        </div>
+        <Upload
+          ref="hover"
+          :show-upload-list="false"
+          :on-success="handleSuccess"
+          :default-file-list="hoverDefaultList"
+          :format="['jpg','jpeg','png', 'bmp']"
+          :max-size="1048"
+          name="files"
+          :on-format-error="handleFormatError"
+          :on-exceeded-size="handleMaxSize"
+          :with-credentials="true"
+          type="drag"
+          action="http://localhost:5888/common/uploadPicture"
+          style="display: inline-block;width:116px;">
+          <div style="width: 116px;height:116px;line-height: 116px;" v-if="hoverList.length < 1">
             <Icon type="ios-camera" size="50"></Icon>
           </div>
         </Upload>
@@ -113,18 +140,12 @@
         <Editor ref="editor" :value='content' :isClear='isClear' @change="change"></Editor>
       </Col>
     </Row>
-    <Row class="row-container" v-if="type==='CAKE'">
+    <Row class="row-container">
       <Col span="2"><p class="row-label">商品销售区域：</p></Col>
       <Col span="18">
         <Row class="row-container" :gutter="16" v-for="(item, index) of regionList" :label="item" :name="item + '_' + index" :key="index">
           <Col span="12">
             <RegionSelect ref="regionSelect" @getCurrentProvince="getCurrentProvince" @getCurrentCity="getCurrentCity" :index="index" :pid="item.provinceId" :cid="item.fkRegionId"></RegionSelect>
-          </Col>
-          <Col span="8">
-            <!-- 店铺 -->
-            <Select v-model="regionList[index].shops" multiple>
-              <Option v-for="shopObj in regionShopList[index]" :value="shopObj.id" :key="shopObj.id">{{ shopObj.name }}</Option>
-            </Select>
           </Col>
           <Col span="4">
             <!-- 添加按钮 -->
@@ -134,34 +155,18 @@
         </Row>
       </Col>
     </Row>
-    <Row class="row-container"  v-if="type==='SNACK'">
-      <Col span="2"><p class="row-label">是否显示<br/>快递价格：</p></Col>
-      <Col span="12">
-        <Row class="row-container">
-          <Col span="6">
-            <i-switch v-model="showExpressPrice" /><span style="margin-left: 10px"></span>
+    <Row class="row-container">
+          <Col span="2"><p class="row-label">原价(元)：</p></Col>
           </Col>
-          <Col span="12" style="">
-          <span>价格：</span>
-            <InputNumber :disabled="!showExpressPrice" :max="100000" v-model="expressPrice" :min="0"></InputNumber>
+          <Col span="4">
+          <InputNumber  :max="100000" v-model="originalPrice" :min="0"></InputNumber>
+          </Col>
+          <Col span="2"><p class="row-label">优惠价(元)：</p></Col>
+          </Col>
+          <Col span="4">
+          <InputNumber  :max="100000" v-model="preferentialPrice" :min="0"></InputNumber>
           </Col>
         </Row>
-      </Col>
-    </Row>
-    <Row class="row-container">
-      <Col span="2"><p class="row-label">商品发布：</p></Col>
-      <Col span="13">
-        <RadioGroup v-model="releaseMode" vertical>
-          <Radio label="NOW">
-            <span>立即发布</span>
-          </Radio>
-          <Radio label="SPECIFY">
-            <span style="margin-right: 10px">上架时间</span>
-            <DatePicker @on-change="changeOnSaleTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="选择上架时间" style="width: 200px" :value="new Date()" :transfer="transfer"></DatePicker>
-          </Radio>
-        </RadioGroup>
-      </Col>
-    </Row>
     <Row type="flex" class="row-container" justify="center" style="margin-top: 20px">
       <Col span="8">
         <Button type="success" long size="large" @click="submit()">确认商品发布</Button>
@@ -187,6 +192,7 @@ export default {
       specList: [],
       // 选中的分类ID
       fkCategoryIds: [],
+      fkSpecificationId: [],
       type: this.$route.params.type,
       content: '',
       isClear: false,
@@ -200,14 +206,16 @@ export default {
       transfer: true,
       // 图片上传相关
       masterList: [],
+      hoverList: [],
+      originalPrice: null,
+      preferentialPrice: null,
       uploadList: [],
       showPreview: false,
       previewObj: {},
       previewUrl: '',
       masterDefaultList: [],
-      imagesDefaultList: [],
-      showExpressPrice: false,
-      expressPrice: null
+      hoverDefaultList: [],
+      imagesDefaultList: []
     }
   },
   created () {
@@ -346,10 +354,6 @@ export default {
         } else {
           // console.log(res.data.data)
           this.specList = res.data.data
-          for (const i in this.specList) {
-            this.specList[i].originalPrice = 0
-            this.specList[i].preferentialPrice = 0
-          }
         }
       }).catch(err => {
         console.log(err)
@@ -369,38 +373,6 @@ export default {
       // 保存最后选中地区下标
       this.lastSelectRegionIndex = index
       this.regionList[index].fkRegionId = cityId
-      // 管理员动态获取当前地区店铺
-      this.getShopListByCity(cityId)
-    },
-    /**
-     * @name  根据地区获取店铺
-     * @param cityId 城市ID
-     * @param index 城市下标
-     */
-    getShopListByCity (cityId) {
-      if (cityId) {
-        this.$axios.get('/shop/queryShopTypeByRegionId', {
-          params: {
-            cityId: cityId
-          }
-        }).then(res => {
-          if (res.data.code === 666) {
-            // console.log(res.data.data)
-            this.$set(this.regionShopList, this.lastSelectRegionIndex, res.data.data)
-            let obj = this.regionList[this.lastSelectRegionIndex]
-            this.$set(this.regionList, this.lastSelectRegionIndex, obj)
-          }
-        }).catch(err => {
-          console.log(err)
-        })
-      }
-    },
-    /**
-     * @name  获取当前地区选中店铺ID
-     * @param shops 所选中店铺ID
-     */
-    selectRegionShops (shops, index) {
-      // this.regionList[index].shops = shops
     },
     /**
      * @name  添加地区下拉
@@ -425,18 +397,10 @@ export default {
       params.type = this.type
       params.status = this.productStatus
       params.fkCategoryIds = this.fkCategoryIds
-      params.specList = []
-      for (let i in this.specList) {
-        if (this.specList[i].checked) {
-          params.specList.push({
-            id: this.specList[i].id,
-            originalPrice: this.specList[i].originalPrice,
-            preferentialPrice: this.specList[i].preferentialPrice
-          })
-        }
-      }
+      params.specList = this.fkSpecificationId
       // 商品主图
       params.masterImage = this.masterList[0].url
+      params.hoverImage = this.hoverList[0].url
       // 商品图片
       params.images = []
       for (let i in this.uploadList) {
@@ -446,10 +410,8 @@ export default {
       }
       params.content = this.content
       params.regionList = this.regionList
-      params.releaseMode = this.releaseMode
-      params.onSaleTime = this.onSaleTime
-      params.showExpressPrice = this.showExpressPrice
-      params.expressPrice = this.expressPrice
+      params.originalPrice = this.originalPrice
+      params.preferentialPrice = this.preferentialPrice
       return params
     },
     /**
@@ -474,15 +436,11 @@ export default {
         this.$Message.error('商品规格不能为空')
         return
       }
-      if (this.type === 'CAKE' && (!data.regionList || data.regionList.length === 0)) {
-        this.$Message.error('商品销售区域不能为空')
-        return
-      }
-      if (!data.releaseMode) {
-        this.$Message.error('商品发布方式不能为空')
-        return
-      }
       if (this.masterList === null || this.masterList.length === 0) {
+        this.$Message.error('商品主图不能为空')
+        return
+      }
+      if (this.hoverList === null || this.hoverList.length === 0) {
         this.$Message.error('商品主图不能为空')
         return
       }
@@ -493,14 +451,14 @@ export default {
       this.$Modal.confirm({
         title: '是否确认提交',
         onOk: () => {
-          this.$axios.post('/product/saveProduct', {
+          this.$axios.post('/product/saveWebSiteProduct', {
             dataJson: JSON.stringify(data)
           }).then(res => {
             if (res.data.code !== 666) {
               this.$Message.warning(res.data.message)
             } else {
               this.$Message.success('保存成功')
-              this.$router.push({name: 'CakeManage'})
+              this.$router.push({name: 'BannerManagrer'})
             }
           }).catch(err => {
             console.log(err)
@@ -546,6 +504,7 @@ export default {
       this.regionList.push({})
     }
     this.masterList = this.$refs.master.fileList
+    this.hoverList = this.$refs.hover.fileList
     this.uploadList = this.$refs.images.fileList
   }
 }

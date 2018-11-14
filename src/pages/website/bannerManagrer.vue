@@ -19,7 +19,7 @@
         <div class="cakeNews">
     <section class="cakeNews-container">
       <div>
-        <Button type="primary" icon="md-add" @click="addremcondModel = true" >新增商品</Button>
+        <Button type="primary" icon="md-add" :to="{name: 'WebsiteProductAdd', params: {type: 'CAKE'}}" >新增商品</Button>
       </div>
       <div class="cakeNews-container-content">
         <Table border :columns="recommendColumns" :data="recommendDataInfo"></Table>
@@ -31,17 +31,22 @@
     <Modal
         v-model="addRegionShopModel"
         title="保存banner图片">
-        <Form ref='formInline' :model='formInline' :rules='ruleInline'>
-            <FormItem prop='bannerDescription'>
+        <Form ref='formInline' :model='formInline' :rules='ruleInline' :label-width="80">
+            <FormItem prop='bannerDescription' label="banner描述">
               <Input type='text' v-model='formInline.bannerDescription' placeholder='banner描述' />
             </FormItem>
-            <FormItem prop='bannerImg'>
-              <Input type='text' v-model='formInline.bannerImg' placeholder='banner图片' />
+            <FormItem label="banner图">
+              <input style='display:block' @change='uploading($event, 1)' type='file' accept='image/*' />
+              <img :src='formInline.bannerSrc' :style="{width: formInline.bannerSrc ? '100px' : '', height: formInline.bannerSrc ? '100px' : ''}"/>
             </FormItem>
-            <FormItem prop='redirectUrl'>
+            <FormItem label="hover图">
+              <input style='display:block' @change='uploading($event, 2)' type='file' accept='image/*' />
+              <img :src='formInline.hoverSrc' :style="{width: formInline.hoverSrc ? '100px' : '', height: formInline.hoverSrc ? '100px' : ''}"/>
+            </FormItem>
+            <FormItem prop='redirectUrl' label="跳转地址">
               <Input type='text' v-model='formInline.redirectUrl' placeholder='跳转地址' />
             </FormItem>
-            <FormItem prop='orderno'>
+            <FormItem prop='orderno' label="排序">
               <Input type='text' v-model='formInline.orderno' placeholder='请填写排序' />
             </FormItem>
         </Form>
@@ -54,14 +59,22 @@
       <Modal
         v-model="addremcondModel"
         title="编辑商品">
-        <Form ref='productFormInline' :model='productFormInline' :rules='productRuleInline'>
-            <FormItem prop='name'>
-              <Input type='text' v-model='productFormInline.name' placeholder='banner描述' />
+        <Form ref='productFormInline' :model='productFormInline' :rules='productRuleInline' :label-width="80">
+            <FormItem prop='name' label="商品名称">
+              <Input type='text' v-model='productFormInline.name' placeholder='商品名称' />
             </FormItem>
-            <FormItem prop='bannerImg'>
-              <Input type='text' v-model='productFormInline.image' placeholder='banner图片' />
+             <FormItem label="商品图片">
+              <input style='display:block' @change='uploading($event, 3)' type='file' accept='image/*' />
+              <img :src='productFormInline.src' :style="{width: productFormInline.src ? '100px' : '', height: productFormInline.src ? '100px' : ''}"/>
             </FormItem>
-            <FormItem prop='orderno'>
+            <FormItem label="hover图">
+              <input style='display:block' @change='uploading($event, 4)' type='file' accept='image/*' />
+              <img :src='productFormInline.hoverSrc' :style="{width: productFormInline.hoverSrc ? '100px' : '', height: productFormInline.hoverSrc ? '100px' : ''}"/>
+            </FormItem>
+            <FormItem prop='redirectUrl' label="跳转地址">
+              <Input type='text' v-model='productFormInline.redirectUrl' placeholder='跳转地址' />
+            </FormItem>
+            <FormItem prop='orderno' label="排序">
               <Input type='text' v-model='productFormInline.orderno' placeholder='请填写排序' />
             </FormItem>
         </Form>
@@ -77,7 +90,7 @@
 <script>
 import { notBlank } from '../../mixin/mixin'
 export default {
-  name: 'WebShopList',
+  name: 'WebBannerList',
   components: {
   },
   mixins: [notBlank],
@@ -96,9 +109,11 @@ export default {
       addremcondModel: false,
       id: null,
       formInline: {
+        id: null,
         bannerDescription: null,
-        bannerUrl: null,
+        bannerSrc: null,
         bannerImg: null,
+        hoverSrc: null,
         hoverImg: null,
         redirectUrl: null,
         orderno: null
@@ -106,17 +121,22 @@ export default {
       productFormInline: {
         name: null,
         image: null,
+        src: null,
+        hoverSrc: null,
+        hoverImg: null,
+        redirectUrl: null,
         orderno: null
       },
       productRuleInline: {
         name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
         image: [{ required: true, message: '请选择名称', trigger: 'blur' }],
-        orderno: [{ required: true, message: '请选择排序', trigger: 'blur' }]
+        redirectUrl: [{ required: true, message: '请输入跳转地址', trigger: 'blur' }],
+        orderno: [{required: true, message: '请选择排序', trigger: 'blur'}]
       },
       ruleInline: {
         name: [{ required: true, message: '请输入banner描述', trigger: 'blur' }],
         redirectUrl: [{ required: true, message: '请输入跳转地址', trigger: 'blur' }],
-        orderno: [{ required: true, message: '请输入排序', trigger: 'blur' }]
+        orderno: [{required: true, message: '请输入排序', trigger: 'blur'}]
       },
       columns: [
         {
@@ -192,6 +212,12 @@ export default {
           }
         },
         {
+          title: '排序',
+          key: 'orderno',
+          align: 'center',
+          tooltip: true
+        },
+        {
           title: '操作',
           key: 'action',
           align: 'center',
@@ -216,9 +242,8 @@ export default {
                       if (res.data.code === 0) {
                         this.id = res.data.banner.id
                         this.formInline.bannerDescription = res.data.banner.bannerDescription
-                        this.formInline.bannerUrl = res.data.banner.bannerUrl
-                        this.formInline.bannerImg = res.data.banner.bannerImg
-                        this.formInline.hoverImg = res.data.banner.hoverImg
+                        this.formInline.bannerSrc = res.data.banner.bannerUrl
+                        this.formInline.hoverSrc = res.data.banner.hoverUrl
                         this.formInline.redirectUrl = res.data.banner.redirectUrl
                         this.formInline.orderno = res.data.banner.orderno
                       }
@@ -251,7 +276,7 @@ export default {
           width: 60,
           render: (h, params) => {
             return h('div', [
-              h('strong', 1 + params.index + this.offset * this.limit)
+              h('strong', 1 + params.index)
             ])
           }
         },
@@ -262,7 +287,7 @@ export default {
           tooltip: true
         },
         {
-          title: 'banner图片',
+          title: '商品图片',
           align: 'center',
           render: (h, params) => {
             return h('div', {
@@ -279,7 +304,7 @@ export default {
                   marginRight: '5px'
                 },
                 attrs: {
-                  src: params.row.image
+                  src: params.row.imageUrl
                 }
               })
             ])
@@ -311,7 +336,7 @@ export default {
         },
         {
           title: '排序',
-          key: 'orderno',
+          key: 'orderNo',
           align: 'center',
           tooltip: true
         },
@@ -332,15 +357,18 @@ export default {
                 on: {
                   click: () => {
                     this.addremcondModel = true
-                    this.$axios.get('/product/searchRecommendProduct', {
+                    this.$axios.get('/product/searchRecommendProductById', {
                       params: {
-                        productId: params.row.id
+                        id: params.row.id
                       }
                     }).then(res => {
-                      if (res.data.code === 0) {
-                        this.id = res.data.rows[0].id
-                        this.productFormInline.name = res.data.rows[0].name
-                        this.productFormInline.orderno = res.data.rows[0].orderno
+                      if (res.data.code === 666) {
+                        this.id = res.data.data.id
+                        this.productFormInline.name = res.data.data.name
+                        this.productFormInline.orderno = res.data.data.orderNo
+                        this.productFormInline.src = res.data.data.imageUrl
+                        this.productFormInline.hoverSrc = res.data.data.hoverUrl
+                        this.productFormInline.redirectUrl = res.data.data.redirectUrl
                       }
                     }).catch(err => {
                       console.log(err)
@@ -456,21 +484,27 @@ export default {
     },
     recommendok () {
       this.$refs['productFormInline'].validate(valid => {
-        if (valid) {
+        if (this.$lodash.isNull(this.id) && (this.$lodash.isNull(this.productFormInline.image) || this.$lodash.isNull(this.productFormInline.hoverImg))) {
+          this.$Message.info('请上传文件')
+        } else if (valid) {
+          let formData = new FormData()
+          formData.append('id', this.id)
+          formData.append('name', this.productFormInline.name)
+          formData.append('orderNo', this.productFormInline.orderno)
+          formData.append('productMainImg', this.productFormInline.image)
+          formData.append('hoverImg', this.productFormInline.hoverImg)
+          formData.append('redirectUrl', this.productFormInline.redirectUrl)
           this.$axios({
-            url: '/shop/saveCityProfile',
+            url: '/product/updateRecommendProduct',
             method: 'post',
-            data: {
-              id: this.id,
-              name: this.productFormInline.name,
-              orderno: this.productFormInline.orderno
-            }
+            headers: {'Content-Type': 'multipart/form-data'},
+            data: formData
           }).then(result => {
             let code = result.data.code
             if (code === 666) {
               this.$Message.success('保存成功')
-              this.cancel()
-              this.getRegionSetShopDataInfo()
+              this.addremcondModel = false
+              this.getRecommendDataInfo()
             } else {
               this.$Message.warning(result.data.message)
             }
@@ -481,28 +515,57 @@ export default {
         }
       })
     },
+    uploading (event, index) {
+      // 获取文件
+      var windowURL = window.URL || window.webkitURL
+      if (index === 1) {
+        this.formInline.bannerImg = event.target.files[0] // 创建图片文件的url
+        this.formInline.bannerSrc = windowURL.createObjectURL(event.target.files[0])
+      } else if (index === 2) {
+        this.formInline.hoverImg = event.target.files[0] // 创建图片文件的url
+        this.formInline.hoverSrc = windowURL.createObjectURL(event.target.files[0])
+      } else if (index === 3) {
+        this.productFormInline.image = event.target.files[0] // 创建图片文件的url
+        this.productFormInline.src = windowURL.createObjectURL(event.target.files[0])
+      } else if (index === 4) {
+        this.productFormInline.hoverImg = event.target.files[0] // 创建图片文件的url
+        this.productFormInline.hoverSrc = windowURL.createObjectURL(event.target.files[0])
+      }
+    },
     recommendcancel () {
       this.$refs['productFormInline'].resetFields()
       this.id = null
       this.productFormInline.name = null
       this.productFormInline.orderno = null
+      this.productFormInline.image = null
+      this.productFormInline.src = null
+      this.productFormInline.hoverImg = null
+      this.productFormInline.hoverSrc = null
+      this.productFormInline.redirectUrl = null
     },
     ok () {
       this.$refs['formInline'].validate(valid => {
-        if (valid) {
+        if (this.$lodash.isNull(this.id) && (this.$lodash.isNull(this.formInline.bannerImg) || this.$lodash.isNull(this.formInline.hoverImg))) {
+          this.$Message.info('请上传文件')
+        } else if (valid) {
+          let formData = new FormData()
+          formData.append('id', this.id)
+          formData.append('bannerDescription', this.formInline.bannerDescription)
+          formData.append('redirectUrl', this.formInline.redirectUrl)
+          formData.append('orderno', this.formInline.orderno)
+          formData.append('bannerImg', this.formInline.bannerImg)
+          formData.append('hoverImg', this.formInline.hoverImg)
           this.$axios({
-            url: '/shop/saveCityProfile',
+            url: '/product/saveBanner',
             method: 'post',
-            data: {
-              id: this.id,
-              cityAddress: JSON.stringify(this.cityAddress)
-            }
+            headers: {'Content-Type': 'multipart/form-data'},
+            data: formData
           }).then(result => {
             let code = result.data.code
             if (code === 666) {
               this.$Message.success('保存成功')
-              this.cancel()
-              this.getRegionSetShopDataInfo()
+              this.addRegionShopModel = false
+              this.getBannerDataInfo()
             } else {
               this.$Message.warning(result.data.message)
             }
@@ -518,9 +581,10 @@ export default {
       this.id = null
       this.formInline.bannerDescription = null
       this.formInline.orderno = null
-      this.formInline.bannerUrl = null
+      this.formInline.bannerSrc = null
       this.formInline.bannerImg = null
       this.formInline.hoverImg = null
+      this.formInline.hoverSrc = null
       this.formInline.redirectUrl = null
       this.formInline.orderno = null
     },

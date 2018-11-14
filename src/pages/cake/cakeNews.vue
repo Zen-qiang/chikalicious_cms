@@ -56,13 +56,13 @@ export default {
       },
       {
         title: '新闻标题',
-        key: 'title',
+        key: 'name',
         align: 'center',
         tooltip: true
       },
       {
         title: '发布时间',
-        key: 'releaseTime',
+        key: 'createdTime',
         align: 'center',
         tooltip: true,
         render: (h, params) => {
@@ -124,7 +124,7 @@ export default {
   methods: {
     getNewsData () {
       this.loading = true
-      this.$axios.get('/product/queryNews', {
+      this.$axios.get('/product/queryRegionCarousel', {
         params: {
           offset: this.offset,
           limit: this.limit,
@@ -154,11 +154,11 @@ export default {
             id: id
           }).then(res => {
             console.log(res)
-            this.$Message.success('This is a success tip')
+            this.$Message.success('删除成功')
             this.getNewsData()
           }).catch(err => {
             console.log(err)
-            this.$Message.error('This is an error tip')
+            this.$Message.error('操作失败')
           })
         }
       })

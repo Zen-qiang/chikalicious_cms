@@ -6,14 +6,10 @@
     </div>
     <section class="cakeNews-container" style="margin-top:30px">
       <div>
-        <RadioGroup v-model="buttonSize" type="button">
-            <span @click="changeProductType(1)">
-              <Radio label="large" @click="changeProductType('5')">上架商品</Radio>
-            </span>
-            <span @click="changeProductType(0)">
-              <Radio label="default">已下架商品</Radio>
-            </span>
-        </RadioGroup>
+        <Tabs type="card"  @on-click="activeTab">
+            <TabPane  label="上架商品" name="1"></TabPane>
+            <TabPane  label="已下架商品" name="0"></TabPane>
+        </Tabs>
       </div>
       <div>
       <head-search @hander-search="search">
@@ -48,12 +44,22 @@
         v-model="recommendTypeModel"
         title="选择推荐类型">
         <p>
+          <span>推荐类型：</span>
           <RadioGroup v-model="recommendType">
             <Radio label="5">新品推荐</Radio>
             <Radio label="6">人气爆款</Radio>
           </RadioGroup>
         </p>
         <br/>
+        <p>
+           <span  v-if="recommendType === '5'" >推荐位置：</span>
+            <Select v-model="recommendIndex" v-if="recommendType === '5'" filterable clearable  placeholder="请推荐位置">
+              <Option value="1">左上一</Option>
+              <Option value="2">中上</Option>
+              <Option value="3">中下</Option>
+              <Option value="4">右</Option>
+            </Select>
+        </p>
         <p>
           推荐商品图片:<input id='fileinput' style='display:block' @change='uploading($event)' type='file' accept='image/*' />
           <img :src='src' :style="{width: src ? '100px' : '', height: src ? '100px' : ''}"/>
@@ -98,6 +104,7 @@ export default {
       productTypeSelect: '',
       recommendType: null,
       recommendTypeModel: false,
+      recommendIndex: null,
       src: '',
       file: null,
       columns: [{
@@ -135,6 +142,18 @@ export default {
       {
         title: '分站市',
         key: 'cityName',
+        align: 'center',
+        tooltip: true
+      },
+      {
+        title: '分类',
+        key: 'value',
+        align: 'center',
+        tooltip: true
+      },
+      {
+        title: '规格',
+        key: 'specValue',
         align: 'center',
         tooltip: true
       },
@@ -188,6 +207,7 @@ export default {
               },
               on: {
                 click: () => {
+                  // 1上架 2下架 4取消首页显示 5推荐上首页 7删除
                   console.log(params.row.onSale)
                   let status = params.row.onSale ? '2' : '1'
                   let text = params.row.onSale ? '下架' : '上架'
@@ -224,6 +244,9 @@ export default {
   watch: {
     recommendTypeModel (val) {
       if (!val) this.cancel()
+    },
+    recommendType (val) {
+      if (val === '6' || val === null) this.recommendIndex = null
     }
   },
   methods: {
@@ -267,7 +290,8 @@ export default {
             data: {
               // _method: 'put',
               id: id,
-              type: type
+              type: type,
+              index: this.recommendIndex
             }
           }).then(result => {
             let code = result.data.code
@@ -311,13 +335,14 @@ export default {
       this.isIndexProduct = status
       this.getProductData()
     },
-    changeProductType (data) {
-      if (data === 1) {
+    activeTab (name) {
+      // 1 上架商品 0  为下架商品
+      if (name === '1') {
         this.productTypeText = '下架'
       } else {
         this.productTypeText = '删除'
       }
-      this.productType = data
+      this.productType = name
       this.getProductData()
     },
     getProductType (data) {
@@ -367,8 +392,9 @@ export default {
         let form = new FormData()
         // form.append('_method','put')
         form.append('id', this.id)
-        form.append('type', this.id)
+        form.append('type', this.recommendType)
         form.append('file', this.file)
+        form.append('index', this.recommendIndex)
         this.$axios({
           url: '/product/updateProductStatusById',
           headers: {'Content-Type': 'multipart/form-data'},

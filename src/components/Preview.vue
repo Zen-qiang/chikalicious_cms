@@ -1,10 +1,12 @@
 <template>
   <div class="preview" v-if="showPreview">
-    <div class="preview-container" v-click-outside="handerOutClick">
+    <div class="preview-container" v-click-outside="handerOutClick" style="text-align: center">
+      <br/><br/><br/>
+      <sapn v-html="title" style="font-size:30px;"/>
       <div class="preview-imgs">
-        <p><img v-for="(item, index) of imgs" :key="index" :src="item"></p>
+        <p v-for="(item, index) of imgs" :key="index"><img width="350" height="200" :src="item" style="margin-top:30px;margin-bottom:15px;"><br/></p>
       </div>
-      <div class="preview-content" v-html="content">
+      <div class="preview-content" v-html="content" style="margin-top:30px;margin-bottom:30px;">
       </div>
     </div>
   </div>
@@ -23,6 +25,9 @@ export default {
       type: Array
     },
     content: {
+      type: String
+    },
+    title: {
       type: String
     }
   },
@@ -52,9 +57,13 @@ export default {
     background: #fff;
   }
   &-imgs {
+    text-align: center;
     img {
       vertical-align: middle;
     }
+  }
+  &-content {
+    text-align: center;
   }
 }
 </style>

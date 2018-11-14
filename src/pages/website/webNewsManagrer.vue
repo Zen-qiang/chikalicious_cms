@@ -50,7 +50,7 @@ export default {
         width: 60,
         render: (h, params) => {
           return h('div', [
-            h('strong', 1 + params.index + this.offset * this.limit)
+            h('strong', 1 + params.index)
           ])
         }
       },
@@ -129,7 +129,8 @@ export default {
           offset: this.offset,
           limit: this.limit,
           title: this.newsTitle ? this.newsTitle : null,
-          releaseTime: this.releaseTime ? this.releaseTime : null
+          releaseTime: this.releaseTime ? this.releaseTime : null,
+          type: 1
         }
       }).then(res => {
         this.loading = false
@@ -154,18 +155,18 @@ export default {
             id: id
           }).then(res => {
             console.log(res)
-            this.$Message.success('This is a success tip')
+            this.$Message.success('删除成功')
             this.getNewsData()
           }).catch(err => {
             console.log(err)
-            this.$Message.error('This is an error tip')
+            this.$Message.error('删除失败')
           })
         }
       })
     },
     changePage (page) {
-      this.offset = page
-      this.getBannerDataInfo()
+      this.offset = page + 1
+      this.getNewsData()
     },
     /**
      * @name  切换每页显示数量
@@ -173,7 +174,7 @@ export default {
      */
     changePageSize (pageSize) {
       this.limit = pageSize
-      this.getBannerDataInfo()
+      this.getNewsData()
     }
   }
 }

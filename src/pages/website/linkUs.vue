@@ -102,7 +102,7 @@ export default {
           align: 'center',
           width: 150,
           render: (h, params) => {
-            if (!params.isRead) {
+            if (!params.row.isRead) {
               return h('div', [
                 h('Button', {
                   props: {
@@ -133,6 +133,38 @@ export default {
                     }
                   }
                 }, '已读'),
+                h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px',
+                    marginTop: '2px'
+                  },
+                  on: {
+                    click: () => {
+                      this.updateEmail(params.row.emailId, 'DELETE')
+                    }
+                  }
+                }, '删除')
+              ])
+            } else {
+              return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'info',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.viewEmail(params)
+                    }
+                  }
+                }, '查看详情'),
                 h('Button', {
                   props: {
                     type: 'error',
@@ -208,7 +240,7 @@ export default {
           }).then(result => {
             let code = result.data.code
             if (code === 666) {
-              this.$Message.success('删除成功')
+              this.$Message.success(text + '成功')
               this.getEmailListData()
             } else {
               this.$Message.warning(result.data.message)

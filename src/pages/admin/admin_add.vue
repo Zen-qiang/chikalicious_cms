@@ -68,7 +68,7 @@ export default {
         userName: [{ required: true, message: '请输入管理员名称', trigger: 'blur' }],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
         phoneNo: [{ required: true, message: '请输入电话号码', trigger: 'blur' }],
-        fkUserRole: [{ required: true, message: '请输入选择角色', trigger: 'change' }]
+        fkUserRole: [{required: true, message: '请输入选择角色', trigger: 'change', type: 'number'}]
       }
     }
   },

@@ -2,14 +2,10 @@
   <div class="cakeNews">
     <section class="cakeNews-container" style="margin-top:30px">
       <div>
-        <RadioGroup v-model="buttonSize" type="button">
-            <span @click="changeProductType(1)">
-              <Radio label="large" @click="changeProductType('5')">上架商品</Radio>
-            </span>
-            <span @click="changeProductType(0)">
-              <Radio label="default">已下架商品</Radio>
-            </span>
-        </RadioGroup>
+         <Tabs type="card"  @on-click="activeTab">
+            <TabPane  label="上架商品" name="1"></TabPane>
+            <TabPane  label="已下架商品" name="0"></TabPane>
+        </Tabs>
       </div>
       <div>
       <head-search @hander-search="search">
@@ -30,7 +26,7 @@
       </head-search>
       </div>
       <div>
-        <Button type="primary" icon="md-add" >添加商品</Button>
+        <Button type="primary" icon="md-add" :to="{name: 'ProductAdd', params: {type: 'SNACK'}}">添加商品</Button>
         <Button type="error" @click="deleteProductByIds()" >批量{{productTypeText}}商品</Button>
       </div>
       <div class="cakeNews-container-content">
@@ -40,6 +36,35 @@
         <Page :total="total" :page-size="pageSize" size="small" show-elevator show-sizer show-total @on-change="changePage" @on-page-size-change="changePageSize" />
       </div>
     </section>
+        <Modal
+        v-model="recommendTypeModel"
+        title="选择推荐类型">
+        <p>
+          <span>推荐类型：</span>
+          <RadioGroup v-model="recommendType">
+            <Radio label="5">新品推荐</Radio>
+            <Radio label="6">人气爆款</Radio>
+          </RadioGroup>
+        </p>
+        <br/>
+        <p>
+           <span  v-if="recommendType === '5'" >推荐位置：</span>
+            <Select v-model="recommendIndex" v-if="recommendType === '5'" filterable clearable  placeholder="请推荐位置">
+              <Option value="1">左上一</Option>
+              <Option value="2">中上</Option>
+              <Option value="3">中下</Option>
+              <Option value="4">右</Option>
+            </Select>
+        </p>
+        <p>
+          推荐商品图片:<input id='fileinput' style='display:block' @change='uploading($event)' type='file' accept='image/*' />
+          <img :src='src' :style="{width: src ? '100px' : '', height: src ? '100px' : ''}"/>
+        </p>
+        <div slot="footer">
+          <Button type="text" size="large" @click="recommendTypeModel=false">取消</Button>
+          <Button type="primary" size="large" @click="ok">确定</Button>
+      </div>
+      </Modal>
   </div>
 </template>
 <script>
@@ -67,7 +92,12 @@ export default {
       productType: 1,
       productTypeText: '下架',
       isIndexProduct: false,
+      recommendTypeModel: false,
+      recommendType: null,
       productTypeSelect: '',
+      recommendIndex: null,
+      src: '',
+      file: null,
       columns: [{
         type: 'selection',
         width: 60,
@@ -79,7 +109,7 @@ export default {
         align: 'center',
         width: 60,
         render: (h, params) => {
-          return h('div', [h('strong', 1 + params.index + this.page * this.pageSize)])
+          return h('div', [h('strong', 1 + params.index)])
         }
       },
       {
@@ -89,8 +119,14 @@ export default {
         tooltip: true
       },
       {
-        title: '店铺名称',
-        key: 'shopName',
+        title: '分类',
+        key: 'value',
+        align: 'center',
+        tooltip: true
+      },
+      {
+        title: '规格',
+        key: 'specValue',
         align: 'center',
         tooltip: true
       },
@@ -126,7 +162,9 @@ export default {
                   this.$router.push({
                     name: 'ProductAdd',
                     params: {
-                      id: params.row.id
+                      id: params.row.id,
+                      cityId: params.row.cityId,
+                      type: 'SNACK'
                     }
                   })
                 }
@@ -156,9 +194,14 @@ export default {
               },
               on: {
                 click: () => {
-                  let status = params.row.onSale ? (params.row.recommend ? '4' : '5') : '7'
-                  let text = params.row.onSale ? (params.row.recommend ? '取消首页显示' : '推荐上首页') : '删除'
-                  this.updateProductStatus(params.row.id, status, text)
+                  let status = params.row.onSale ? ((params.row.recommend || params.row.hotProduct) ? '4' : '5') : '7'
+                  let text = params.row.onSale ? ((params.row.recommend || params.row.hotProduct) ? '取消首页显示' : '推荐上首页') : '删除'
+                  if (status !== '5') {
+                    this.updateProductStatus(params.row.id, status, text)
+                  } else {
+                    this.id = params.row.id
+                    this.recommendTypeModel = true
+                  }
                 }
               }
             }, params.row.onSale ? (params.row.recommend ? '取消首页显示' : '推荐上首页') : '删除')
@@ -169,6 +212,14 @@ export default {
   },
   created () {
     this.getProductData()
+  },
+  watch: {
+    recommendTypeModel (val) {
+      if (!val) this.cancel()
+    },
+    recommendType (val) {
+      if (val === '6' || val === null) this.recommendIndex = null
+    }
   },
   methods: {
     search () {
@@ -206,9 +257,10 @@ export default {
             url: '/product/updateProductStatusById',
             method: 'post',
             data: {
-              _method: 'put',
+              // _method: 'put',
               id: id,
-              type: type
+              type: type,
+              index: this.recommendIndex
             }
           }).then(result => {
             let code = result.data.code
@@ -226,6 +278,12 @@ export default {
         }
       })
     },
+    uploading (event) {
+      // 获取文件
+      var windowURL = window.URL || window.webkitURL
+      this.file = event.target.files[0] // 创建图片文件的url
+      this.src = windowURL.createObjectURL(event.target.files[0])
+    },
     changePage (page) {
       this.page = page
       this.getProductData()
@@ -238,13 +296,14 @@ export default {
       this.isIndexProduct = status
       this.getProductData()
     },
-    changeProductType (data) {
-      if (data === 1) {
+    activeTab (name) {
+      // 1 上架商品 0  为下架商品
+      if (name === '1') {
         this.productTypeText = '下架'
       } else {
         this.productTypeText = '删除'
       }
-      this.productType = data
+      this.productType = name
       this.getProductData()
     },
     getProductType (data) {
@@ -284,6 +343,44 @@ export default {
           })
         }
       })
+    },
+    ok () {
+      if (this.$lodash.isNull(this.recommendType)) {
+        this.$Message.info('请选择推荐类型')
+      } else if (this.$lodash.isNull(this.file)) {
+        this.$Message.info('请选择文件')
+      } else {
+        let form = new FormData()
+        // form.append('_method','put')
+        form.append('id', this.id)
+        form.append('type', this.recommendType)
+        form.append('file', this.file)
+        form.append('index', this.recommendIndex)
+        this.$axios({
+          url: '/product/updateProductStatusById',
+          headers: {'Content-Type': 'multipart/form-data'},
+          method: 'post',
+          data: form
+        }).then(result => {
+          let code = result.data.code
+          if (code === 666) {
+            this.$Message.success('推荐上首页成功')
+            this.recommendTypeModel = false
+            this.getProductData()
+          } else {
+            this.$Message.warning(result.data.message)
+          }
+        }).catch(err => {
+          // this.loading = false
+          console.log(err)
+          this.$Message.error('操作失败')
+        })
+      }
+    },
+    cancel () {
+      this.recommendType = null
+      this.file = null
+      this.src = null
     }
   }
 }

@@ -42,6 +42,7 @@ const WebArtAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/we
 const BannerManagrer = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/bannerManagrer.vue')
 const LinkUs = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/linkUs.vue')
 const AboutUs = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/aboutUs.vue')
+const WebsiteProductAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/website_product_add.vue')
 
 Vue.use(Router)
 
@@ -374,6 +375,15 @@ export default new Router({
           component: AboutUs,
           meta: {
             title: '关于我们',
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/BannerManagrer/WebsiteProductAdd',
+          name: 'WebsiteProductAdd',
+          component: WebsiteProductAdd,
+          meta: {
+            title: '新增商品',
             requiresAuth: true
           }
         }

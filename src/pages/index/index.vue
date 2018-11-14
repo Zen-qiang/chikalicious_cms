@@ -36,6 +36,15 @@
                 v-if="!subMenu.children"
               >{{subMenu.label}}</MenuItem>
             </Submenu>
+            <Submenu name="" target='www.baidu.com' to='www.baidu.com' replace='www.baidu.com'>
+              <template slot="title">
+                  <Icon type="ios-navigate"></Icon>
+                  <span  @click="toCustomService()">
+                  客服
+                  </span>
+              </template>
+              <MenuItem name="" ></MenuItem>
+            </Submenu>
           </Menu>
         </Sider>
         <Layout :style="{padding: '0 24px 24px'}">
@@ -110,6 +119,10 @@ export default {
     getSelect (val) {
       let index = this.$lodash.head(this.$lodash.split(val, '-', 1))
       this.selectMenu_index = this.$lodash.toNumber(index)
+    },
+    toCustomService () {
+      // 微信客服
+      window.open('https://mpkf.weixin.qq.com/', '_blank')
     },
     popBoxClick (name) {
       switch (name) {

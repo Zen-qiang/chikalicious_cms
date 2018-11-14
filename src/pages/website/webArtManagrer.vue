@@ -4,7 +4,7 @@
     <head-search @hander-search="search">
       <div class="cakeNews-searchContent fx">
         <p>
-          <span>标题：</span>
+          <span>艺术标题：</span>
           <Input v-model="newsTitle" placeholder="Enter something..." clearable style="width: 200px" />
         </p>
         <p>
@@ -15,13 +15,13 @@
     </head-search>
     <section class="cakeNews-container">
       <div>
-        <Button type="primary" icon="md-add"  to="/WebArtManagrer/WebArtAdd">添加艺术</Button>
+        <Button type="primary" icon="md-add"  to="/WebNewsManagrer/WebNewsAdd">添加新闻</Button>
       </div>
       <div class="cakeNews-container-content">
         <Table border :loading="loading" :columns="columns" :data="newsData"></Table>
       </div>
       <div class="cakeNews-container-page">
-        <Page :total="total" :page-size="limit" :current="offset + 1" @on-change="pageChange" show-elevator />
+        <Page :total="total" :page-size="limit" size="small" show-elevator show-sizer show-total @on-change="changePage" @on-page-size-change="changePageSize"/>
       </div>
     </section>
   </div>
@@ -30,7 +30,7 @@
 <script>
 import HeadSearch from '../../components/HeadSearch.vue'
 export default {
-  name: 'WebArtManagrer',
+  name: 'WebNewsManagrer',
   components: {
     HeadSearch
   },
@@ -50,7 +50,7 @@ export default {
         width: 60,
         render: (h, params) => {
           return h('div', [
-            h('strong', 1 + params.index + this.offset * this.limit)
+            h('strong', 1 + params.index)
           ])
         }
       },
@@ -129,7 +129,8 @@ export default {
           offset: this.offset,
           limit: this.limit,
           title: this.newsTitle ? this.newsTitle : null,
-          releaseTime: this.releaseTime ? this.releaseTime : null
+          releaseTime: this.releaseTime ? this.releaseTime : null,
+          type: 2
         }
       }).then(res => {
         this.loading = false
@@ -148,24 +149,30 @@ export default {
     },
     deleteNews (id) {
       this.$Modal.confirm({
-        title: '确定删除该新闻吗？',
+        title: '确定删除该艺术吗？',
         onOk: () => {
           this.$axios.post('/product/deleteNewsById', {
             id: id
           }).then(res => {
-            console.log(res)
-            this.$Message.success('This is a success tip')
+            this.$Message.success('删除成功')
             this.getNewsData()
           }).catch(err => {
             console.log(err)
-            this.$Message.error('This is an error tip')
+            this.$Message.error('操作失败')
           })
         }
       })
     },
-    pageChange (index) {
-      console.log(index)
-      this.offset = index - 1
+    changePage (page) {
+      this.offset = page
+      this.getNewsData()
+    },
+    /**
+     * @name  切换每页显示数量
+     * @param pageSize  当前每页显示数量
+     */
+    changePageSize (pageSize) {
+      this.limit = pageSize
       this.getNewsData()
     }
   }
