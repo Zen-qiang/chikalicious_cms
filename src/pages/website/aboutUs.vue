@@ -29,7 +29,7 @@
           :on-exceeded-size="handleMaxSize"
           :with-credentials="true"
           type="drag"
-          action="http://localhost:5888/common/uploadPicture"
+          action="https://mp.chikalicious.cn/common/uploadPicture"
           style="display: inline-block;width:116px;">
           <div style="width: 116px;height:116px;line-height: 116px;" v-if="uploadList.length !== 6">
             <Icon type="ios-camera" size="50"></Icon>

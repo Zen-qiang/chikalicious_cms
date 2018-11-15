@@ -35,7 +35,8 @@ router.beforeEach((to, from, next) => {
   let token = window.localStorage.getItem('session-token')
   if (to.matched.some(record => record.meta.requiresAuth) && (!token || token === null)) {
     next({
-      path: '/login',
+      // path: '/login',
+      name: 'Login',
       query: { redirect: to.fullPath }
     })
   } else {

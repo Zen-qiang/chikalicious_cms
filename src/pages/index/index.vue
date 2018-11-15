@@ -32,16 +32,14 @@
                 v-for="(subMenu, idx) of menu.subItems"
                 :key="index + '-' + idx"
                 :name="index + '-' + idx"
-                :to="subMenu.path"
+                :to="subMenu.name"
                 v-if="!subMenu.children"
               >{{subMenu.label}}</MenuItem>
             </Submenu>
-            <Submenu name="" target='www.baidu.com' to='www.baidu.com' replace='www.baidu.com'>
+            <Submenu name="kf">
               <template slot="title">
                   <Icon type="ios-navigate"></Icon>
-                  <span  @click="toCustomService()">
-                  客服
-                  </span>
+                  <span  @click="toCustomService()">客服</span>
               </template>
               <MenuItem name="" ></MenuItem>
             </Submenu>
@@ -104,7 +102,8 @@ export default {
       return arr
     },
     firstRouterName () {
-      return this.$lodash.head(this.breadcrumbs)
+      // return this.$lodash.head(this.breadcrumbs)
+      return this.breadcrumbs[1]
     },
     openNames () {
       return this.menusMock.findIndex(item => {
@@ -127,7 +126,8 @@ export default {
     popBoxClick (name) {
       switch (name) {
         case 'logout':
-          this.$router.replace('/Login')
+          window.localStorage.removeItem('session-token')
+          this.$router.replace({name: 'Login'})
           break
         default:
           break

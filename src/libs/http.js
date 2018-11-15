@@ -11,7 +11,7 @@ axios.defaults.timeout = 30000
 axios.defaults.withCredentials = true
 // http://101.132.134.137:5888
 // http://192.168.3.41:5888
-axios.defaults.baseURL = 'http://192.168.3.41:5888'
+axios.defaults.baseURL = 'https://mp.chikalicious.cn'
 
 // http请求拦截器
 axios.interceptors.request.use(
