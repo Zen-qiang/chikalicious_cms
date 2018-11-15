@@ -51,10 +51,10 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/cms/login'
     },
     {
-      path: '/login',
+      path: '/cms/login',
       name: 'Login',
       component: Login
     },
