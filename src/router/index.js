@@ -43,6 +43,10 @@ const BannerManagrer = () => import(/* webpackChunkName: "group-cake" */ '../pag
 const LinkUs = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/linkUs.vue')
 const AboutUs = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/aboutUs.vue')
 const WebsiteProductAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/website_product_add.vue')
+// 日志
+const OperationLog = () => import(/* webpackChunkName: "group-cake" */ '../pages/operatLog/operation_log.vue')
+// 日志
+const ConsoleInfo = () => import(/* webpackChunkName: "group-cake" */ '../pages/consoleInfo/console_info.vue')
 
 Vue.use(Router)
 
@@ -384,6 +388,24 @@ export default new Router({
           component: WebsiteProductAdd,
           meta: {
             title: '新增商品',
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'OperationLog',
+          name: 'OperationLog',
+          component: OperationLog,
+          meta: {
+            title: '操作日志',
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'ConsoleInfo',
+          name: 'ConsoleInfo',
+          component: ConsoleInfo,
+          meta: {
+            title: '控制台',
             requiresAuth: true
           }
         }

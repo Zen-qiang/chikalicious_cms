@@ -1,18 +1,16 @@
 export default [
-  // {
-  //   item: { title: '控制台' },
-  //   subItems: [
-  //     { label: '普通商品列表' },
-  //     { label: '商品分类' },
-  //     { label: '商品品牌' }
-  //   ]
-  // },
-  // {
-  //   item: { title: '操作日志' },
-  //   subItems: [
-  //     { label: '' }
-  //   ]
-  // },
+  {
+    item: { title: '控制台' },
+    subItems: [
+      {label: '控制台', path: '/ConsoleInfo', name: 'ConsoleInfo'}
+    ]
+  },
+  {
+    item: { title: '操作日志' },
+    subItems: [
+      { label: '操作日志', path: '/OperationLog', name: 'OperationLog' }
+    ]
+  },
   {
     item: { title: '蛋糕' },
     subItems: [
@@ -51,6 +49,12 @@ export default [
     ]
   },
   {
+    item: { title: '会员' },
+    subItems: [
+      { label: '会员', path: '/MemberManage', name: 'MemberManage' }
+    ]
+  },
+  {
     item: { title: '统计' },
     subItems: [
       { label: '平台销量情况', path: '/PlatFromSaleCount', name: 'PlatFromSaleCount' },
@@ -77,12 +81,6 @@ export default [
       { label: '关于我们', path: '/AboutUs', name: 'AboutUs' }
     ]
   }
-  // {
-  //   item: { title: '订单' },
-  //   subItems: [
-  //     { label: '' }
-  //   ]
-  // },
   // {
   //   item: { title: '厨房' },
   //   subItems: [
