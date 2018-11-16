@@ -23,6 +23,7 @@ const ShopList = () => import(/* webpackChunkName: "group-order" */ '../pages/sh
 const ShopRegionManage = () => import(/* webpackChunkName: "group-order" */ '../pages/shop/shopRegionManage.vue')
 // 会员
 const MemberManage = () => import(/* webpackChunkName: "group-order" */ '../pages/merber/memberManage.vue')
+const UserAgreement = () => import(/* webpackChunkName: "group-order" */ '../pages/merber/user_agreement.vue')
 // 统计
 const PlatFromSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/platFromSaleCount.vue')
 const ShopSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/shopSaleCount.vue')
@@ -406,6 +407,15 @@ export default new Router({
           component: ConsoleInfo,
           meta: {
             title: '控制台',
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'UserAgreement',
+          name: 'UserAgreement',
+          component: UserAgreement,
+          meta: {
+            title: '用户协议',
             requiresAuth: true
           }
         }

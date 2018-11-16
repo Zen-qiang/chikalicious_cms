@@ -51,7 +51,8 @@ export default [
   {
     item: { title: '会员' },
     subItems: [
-      { label: '会员', path: '/MemberManage', name: 'MemberManage' }
+      { label: '会员', path: '/MemberManage', name: 'MemberManage' },
+      { label: '用户协议', path: '/UserAgreement', name: 'UserAgreement' }
     ]
   },
   {
