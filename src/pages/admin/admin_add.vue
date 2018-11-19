@@ -103,6 +103,7 @@ export default {
           this.provinceId = res.data.data.provinceId
           this.getCityListByProvince()
           this.cityId = res.data.data.cityId
+          this.changUserRole()
         }
       }).catch(err => {
         console.log(err)

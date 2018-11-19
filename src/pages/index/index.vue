@@ -23,7 +23,7 @@
       <Layout>
         <Sider hide-trigger :style="{background: '#fff'}">
           <Menu :active-name="openNames + '-' + activeName" theme="light" width="auto" :open-names="[openNames]"  @on-select="getSelect">
-            <Submenu v-for="(menu, index) of menusMock" :key="index" :name="index">
+            <Submenu v-if="menu.item.show"  v-for="(menu, index) of menusMock" :key="index" :name="index">
               <template slot="title">
                   <Icon type="ios-navigate"></Icon>
                   {{menu.item.title}}
@@ -33,16 +33,16 @@
                 :key="index + '-' + idx"
                 :name="index + '-' + idx"
                 :to="subMenu.path"
-                v-if="!subMenu.children"
+                v-if="!subMenu.children && subMenu.show"
               >{{subMenu.label}}</MenuItem>
             </Submenu>
-            <Submenu name="kf">
+            <!-- <Submenu name="kf">
               <template slot="title">
                   <Icon type="ios-navigate"></Icon>
                   <span  @click="toCustomService()">客服</span>
               </template>
               <MenuItem name="" ></MenuItem>
-            </Submenu>
+            </Submenu> -->
           </Menu>
         </Sider>
         <Layout :style="{padding: '0 24px 24px'}">
@@ -72,7 +72,9 @@ export default {
       menusMock: menusMock,
       selectMenu_index: 0,
       showPopbox: false,
-      userName: localStorage.getItem('session-token')
+      userName: localStorage.getItem('session-token'),
+      permissions: JSON.parse(localStorage.getItem('permissions')),
+      roles: JSON.parse(localStorage.getItem('roles'))
     }
   },
   computed: {
@@ -113,7 +115,22 @@ export default {
       return this.menusMock[this.openNames].subItems.findIndex(item => item.name === this.firstRouterName)
     }
   },
+  created () {
+    this.processMenuMock()
+  },
   methods: {
+    processMenuMock () {
+      this.menusMock.forEach(menu => {
+        let show = false
+        menu.subItems.forEach(subItem => {
+          if (this.permissions.indexOf(subItem.name) > -1 || (this.roles[0] === 'ADMIN')) {
+            subItem.show = true
+            show = true
+          }
+        })
+        menu.item.show = show
+      })
+    },
     getSelect (val) {
       let index = this.$lodash.head(this.$lodash.split(val, '-', 1))
       this.selectMenu_index = this.$lodash.toNumber(index)

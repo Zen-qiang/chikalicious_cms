@@ -63,6 +63,13 @@ export default {
         let code = result.data.code
         if (code === 666) {
           window.localStorage.setItem('session-token', this.userName)
+          console.log(result.data)
+          if (result.data.data.permissions) {
+            window.localStorage.setItem('permissions', JSON.stringify(result.data.data.permissionSet))
+          }
+          if (result.data.data.roles) {
+            window.localStorage.setItem('roles', JSON.stringify(result.data.data.roleSet))
+          }
           this.$Message.success('登陆成功')
           this.$router.replace({name: 'Index'})
         } else {

@@ -393,7 +393,7 @@ export default new Router({
           }
         },
         {
-          path: 'OperationLog',
+          path: '/OperationLog',
           name: 'OperationLog',
           component: OperationLog,
           meta: {
@@ -402,7 +402,7 @@ export default new Router({
           }
         },
         {
-          path: 'ConsoleInfo',
+          path: '/ConsoleInfo',
           name: 'ConsoleInfo',
           component: ConsoleInfo,
           meta: {
@@ -411,7 +411,7 @@ export default new Router({
           }
         },
         {
-          path: 'UserAgreement',
+          path: '/UserAgreement',
           name: 'UserAgreement',
           component: UserAgreement,
           meta: {
