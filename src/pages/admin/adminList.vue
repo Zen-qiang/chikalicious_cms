@@ -3,7 +3,7 @@
     <!-- <router-link to="/CakeNews/CakeNewsAdd">toAdd</router-link> -->
     <section class="cakeNews-container">
       <div>
-        <Button type="primary" icon="md-add"  to="/AdminList/AdminAdd">新增管理员</Button>
+        <Button type="primary" icon="md-add" :to="{name: 'AdminAdd'}">新增管理员</Button>
       </div>
       <div class="cakeNews-container-content">
         <Table border :loading="loading" :columns="columns" :data="adminListData"></Table>

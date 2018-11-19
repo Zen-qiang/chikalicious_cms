@@ -23,6 +23,7 @@ const ShopList = () => import(/* webpackChunkName: "group-order" */ '../pages/sh
 const ShopRegionManage = () => import(/* webpackChunkName: "group-order" */ '../pages/shop/shopRegionManage.vue')
 // 会员
 const MemberManage = () => import(/* webpackChunkName: "group-order" */ '../pages/merber/memberManage.vue')
+const UserAgreement = () => import(/* webpackChunkName: "group-order" */ '../pages/merber/user_agreement.vue')
 // 统计
 const PlatFromSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/platFromSaleCount.vue')
 const ShopSaleCount = () => import(/* webpackChunkName: "group-order" */ '../pages/count/shopSaleCount.vue')
@@ -43,6 +44,10 @@ const BannerManagrer = () => import(/* webpackChunkName: "group-cake" */ '../pag
 const LinkUs = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/linkUs.vue')
 const AboutUs = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/aboutUs.vue')
 const WebsiteProductAdd = () => import(/* webpackChunkName: "group-cake" */ '../pages/website/website_product_add.vue')
+// 日志
+const OperationLog = () => import(/* webpackChunkName: "group-cake" */ '../pages/operatLog/operation_log.vue')
+// 日志
+const ConsoleInfo = () => import(/* webpackChunkName: "group-cake" */ '../pages/consoleInfo/console_info.vue')
 
 Vue.use(Router)
 
@@ -384,6 +389,33 @@ export default new Router({
           component: WebsiteProductAdd,
           meta: {
             title: '新增商品',
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'OperationLog',
+          name: 'OperationLog',
+          component: OperationLog,
+          meta: {
+            title: '操作日志',
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'ConsoleInfo',
+          name: 'ConsoleInfo',
+          component: ConsoleInfo,
+          meta: {
+            title: '控制台',
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'UserAgreement',
+          name: 'UserAgreement',
+          component: UserAgreement,
+          meta: {
+            title: '用户协议',
             requiresAuth: true
           }
         }

@@ -13,7 +13,7 @@
         <Table border :loading="loading" :columns="columns" :data="merberDataInfo"></Table>
       </div>
       <div class="cakeNews-container-page">
-        <Page :total="total" :page-size="limit" :current="offset + 1" @on-change="pageChange" show-elevator />
+        <Page :total="total" :page-size="limit" size="small" show-elevator show-sizer show-total @on-change="changePage" @on-page-size-change="changePageSize"/>
       </div>
     </section>
   </div>
@@ -101,8 +101,12 @@ export default {
         this.loading = false
       })
     },
-    pageChange (index) {
-      this.offset = index - 1
+    changePage (page) {
+      this.offset = page
+      this.getMerberDataInfo()
+    },
+    changePageSize (pageSize) {
+      this.pageSize = pageSize
       this.getMerberDataInfo()
     }
   }
