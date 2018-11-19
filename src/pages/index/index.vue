@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import menusMock from '../../mock/menusMock.js'
+// import menusMock from '../../mock/menusMock.js'
 import PopBox from '../../components/PopBox.vue'
 export default {
   name: 'index',
@@ -69,12 +69,12 @@ export default {
   },
   data () {
     return {
-      menusMock: menusMock,
+      menusMock: JSON.parse(localStorage.getItem('menusMock')),
       selectMenu_index: 0,
       showPopbox: false,
-      userName: localStorage.getItem('session-token'),
-      permissions: JSON.parse(localStorage.getItem('permissions')),
-      roles: JSON.parse(localStorage.getItem('roles'))
+      userName: localStorage.getItem('session-token')
+      // permissions: JSON.parse(localStorage.getItem('permissions')),
+      // roles: JSON.parse(localStorage.getItem('roles'))
     }
   },
   computed: {
@@ -115,22 +115,7 @@ export default {
       return this.menusMock[this.openNames].subItems.findIndex(item => item.name === this.firstRouterName)
     }
   },
-  created () {
-    this.processMenuMock()
-  },
   methods: {
-    processMenuMock () {
-      this.menusMock.forEach(menu => {
-        let show = false
-        menu.subItems.forEach(subItem => {
-          if (this.permissions.indexOf(subItem.name) > -1 || (this.roles[0] === 'ADMIN')) {
-            subItem.show = true
-            show = true
-          }
-        })
-        menu.item.show = show
-      })
-    },
     getSelect (val) {
       let index = this.$lodash.head(this.$lodash.split(val, '-', 1))
       this.selectMenu_index = this.$lodash.toNumber(index)

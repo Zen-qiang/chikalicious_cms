@@ -23,6 +23,7 @@
   </div>
 </template>
 <script>
+import menusMock from '../../mock/menusMock.js'
 export default {
   name: 'login',
   data () {
@@ -30,7 +31,11 @@ export default {
       userName: '',
       password: '',
       loading: false,
-      alertText: ''
+      alertText: '',
+      permissions: null,
+      roles: null,
+      menusMock: menusMock,
+      redirect: 'Index'
     }
   },
   methods: {
@@ -63,15 +68,19 @@ export default {
         let code = result.data.code
         if (code === 666) {
           window.localStorage.setItem('session-token', this.userName)
-          console.log(result.data)
+          // console.log(result.data)
           if (result.data.data.permissions) {
-            window.localStorage.setItem('permissions', JSON.stringify(result.data.data.permissionSet))
+            this.permissions = result.data.data.permissionSet
+            // window.localStorage.setItem('permissions', JSON.stringify(result.data.data.permissionSet))
           }
           if (result.data.data.roles) {
-            window.localStorage.setItem('roles', JSON.stringify(result.data.data.roleSet))
+            this.roles = result.data.data.roleSet
+            // window.localStorage.setItem('roles', JSON.stringify(result.data.data.roleSet))
           }
+          this.processMenuMock()
+          window.localStorage.setItem('menusMock', JSON.stringify(this.menusMock))
           this.$Message.success('登陆成功')
-          this.$router.replace({name: 'Index'})
+          this.$router.replace({name: this.redirect})
         } else {
           this.$Message.warning(result.data.message)
         }
@@ -79,6 +88,22 @@ export default {
         this.loading = false
         console.log(err)
         this.$Message.error('登陆失败')
+      })
+    },
+    processMenuMock () {
+      this.menusMock.forEach(menu => {
+        let show = false
+        menu.subItems.forEach(subItem => {
+          // console.log(subItem.name, subItem.label)
+          if (this.permissions.indexOf(subItem.name) > -1 || (this.roles[0] === 'ADMIN')) {
+            subItem.show = true
+            if (this.redirect === 'Index') {
+              this.redirect = subItem.name
+            }
+            show = true
+          }
+        })
+        menu.item.show = show
       })
     }
   }
