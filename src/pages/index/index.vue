@@ -127,8 +127,12 @@ export default {
     popBoxClick (name) {
       switch (name) {
         case 'logout':
-          window.localStorage.removeItem('session-token')
-          this.$router.replace({name: 'Login'})
+          this.$axios.get('/logout').then(res => {
+            window.localStorage.removeItem('session-token')
+            this.$router.replace({name: 'Login'})
+          }).catch(err => {
+            console.error(err)
+          })
           break
         default:
           break
