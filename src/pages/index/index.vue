@@ -32,7 +32,7 @@
                 v-for="(subMenu, idx) of menu.subItems"
                 :key="index + '-' + idx"
                 :name="index + '-' + idx"
-                :to="subMenu.name"
+                :to="subMenu.path"
                 v-if="!subMenu.children"
               >{{subMenu.label}}</MenuItem>
             </Submenu>
@@ -102,8 +102,7 @@ export default {
       return arr
     },
     firstRouterName () {
-      // return this.$lodash.head(this.breadcrumbs)
-      return this.breadcrumbs[1]
+      return this.$lodash.head(this.breadcrumbs)
     },
     openNames () {
       return this.menusMock.findIndex(item => {

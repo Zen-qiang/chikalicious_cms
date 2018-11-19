@@ -59,14 +59,14 @@ export default new Router({
       component: Login
     },
     {
-      path: '/cms',
+      path: '/index',
       name: 'Index',
       component: Index,
-      redirect: '/cms/CakeClassify',
+      redirect: '/CakeClassify',
       children: [
         // 蛋糕
         {
-          path: 'CakeClassify',
+          path: '/CakeClassify',
           name: 'CakeClassify',
           component: CakeClassify,
           meta: {
@@ -75,7 +75,7 @@ export default new Router({
           }
         },
         {
-          path: 'CakeManage',
+          path: '/CakeManage',
           name: 'CakeManage',
           component: CakeManage,
           meta: {
@@ -84,7 +84,7 @@ export default new Router({
           }
         },
         {
-          path: 'CakeHomepages',
+          path: '/CakeHomepages',
           name: 'CakeHomepages',
           component: CakeHomepages,
           meta: {
@@ -93,7 +93,7 @@ export default new Router({
           }
         },
         {
-          path: 'CakeNews',
+          path: '/CakeNews',
           name: 'CakeNews',
           component: CakeNews,
           meta: {
@@ -102,7 +102,7 @@ export default new Router({
           }
         },
         {
-          path: 'CakeManage/ProductAdd',
+          path: '/CakeManage/ProductAdd',
           name: 'ProductAdd',
           component: ProductAdd,
           meta: {
@@ -110,18 +110,18 @@ export default new Router({
           }
         },
         {
-          path: 'CakeNews/CakeNewsAdd',
+          path: '/CakeNews/CakeNewsAdd',
           name: 'CakeNewsAdd',
           component: CakeNewsAdd,
           meta: {
             title: '添加新闻',
             requiresAuth: true
           },
-          alias: 'CakeNews/CakeNewsAdd/:id'
+          alias: '/CakeNews/CakeNewsAdd/:id'
         },
         // 零食
         {
-          path: 'snacksClassify',
+          path: '/snacksClassify',
           name: 'SnacksClassify',
           component: SnacksClassify,
           meta: {
@@ -130,7 +130,7 @@ export default new Router({
           }
         },
         {
-          path: 'snacksManage',
+          path: '/snacksManage',
           name: 'SnacksManage',
           component: SnacksManage,
           meta: {
@@ -139,7 +139,7 @@ export default new Router({
           }
         },
         {
-          path: 'snacksHomepages',
+          path: '/snacksHomepages',
           name: 'SnacksHomepages',
           component: SnacksHomepages,
           meta: {
@@ -149,7 +149,7 @@ export default new Router({
         },
         // 订单
         {
-          path: 'CakeOrders',
+          path: '/CakeOrders',
           name: 'CakeOrders',
           component: CakeOrders,
           meta: {
@@ -158,7 +158,7 @@ export default new Router({
           }
         },
         {
-          path: 'SnackOrders',
+          path: '/SnackOrders',
           name: 'SnackOrders',
           component: SnackOrders,
           meta: {
@@ -167,7 +167,7 @@ export default new Router({
           }
         },
         {
-          path: 'KitchenOrders',
+          path: '/KitchenOrders',
           name: 'KitchenOrders',
           component: KitchenOrders,
           meta: {
@@ -176,7 +176,7 @@ export default new Router({
           }
         },
         {
-          path: 'CakeOrders/CakeOrderDetail',
+          path: '/CakeOrders/CakeOrderDetail',
           name: 'CakeOrderDetail',
           component: OrderDetail,
           meta: {
@@ -185,7 +185,7 @@ export default new Router({
           }
         },
         {
-          path: 'SnackOrders/SnackOrderDetail',
+          path: '/SnackOrders/SnackOrderDetail',
           name: 'SnackOrderDetail',
           component: OrderDetail,
           meta: {
@@ -194,7 +194,7 @@ export default new Router({
           }
         },
         {
-          path: 'KitchenOrders/KitchenOrderDetail',
+          path: '/KitchenOrders/KitchenOrderDetail',
           name: 'KitchenOrderDetail',
           component: OrderDetail,
           meta: {
@@ -204,7 +204,7 @@ export default new Router({
         },
         // 店铺
         {
-          path: 'ShopList',
+          path: '/ShopList',
           name: 'ShopList',
           component: ShopList,
           meta: {
@@ -213,7 +213,7 @@ export default new Router({
           }
         },
         {
-          path: 'ShopRegionManage',
+          path: '/ShopRegionManage',
           name: 'ShopRegionManage',
           component: ShopRegionManage,
           meta: {
@@ -223,7 +223,7 @@ export default new Router({
         },
         // 会员
         {
-          path: 'MemberManage',
+          path: '/MemberManage',
           name: 'MemberManage',
           component: MemberManage,
           meta: {
@@ -233,7 +233,7 @@ export default new Router({
         },
         // 统计
         {
-          path: 'CakeSaleCount',
+          path: '/CakeSaleCount',
           name: 'CakeSaleCount',
           component: CakeSaleCount,
           meta: {
@@ -242,7 +242,7 @@ export default new Router({
           }
         },
         {
-          path: 'SnackSaleCount',
+          path: '/SnackSaleCount',
           name: 'SnackSaleCount',
           component: SnackSaleCount,
           meta: {
@@ -251,7 +251,7 @@ export default new Router({
           }
         },
         {
-          path: 'ShopSaleCount',
+          path: '/ShopSaleCount',
           name: 'ShopSaleCount',
           component: ShopSaleCount,
           meta: {
@@ -260,7 +260,7 @@ export default new Router({
           }
         },
         {
-          path: 'MerberSaleCount',
+          path: '/MerberSaleCount',
           name: 'MerberSaleCount',
           component: MerberSaleCount,
           meta: {
@@ -269,7 +269,7 @@ export default new Router({
           }
         },
         {
-          path: 'PlatFromSaleCount',
+          path: '/PlatFromSaleCount',
           name: 'PlatFromSaleCount',
           component: PlatFromSaleCount,
           meta: {
@@ -279,7 +279,7 @@ export default new Router({
         },
         // 管理员
         {
-          path: 'AdminList',
+          path: '/AdminList',
           name: 'AdminList',
           component: AdminList,
           meta: {
@@ -288,7 +288,7 @@ export default new Router({
           }
         },
         {
-          path: 'AdminList/AdminAdd',
+          path: '/AdminList/AdminAdd',
           name: 'AdminAdd',
           component: AdminAdd,
           meta: {
@@ -298,7 +298,7 @@ export default new Router({
         },
         // 网站
         {
-          path: 'WebShopList',
+          path: '/WebShopList',
           name: 'WebShopList',
           component: WebShopList,
           meta: {
@@ -307,7 +307,7 @@ export default new Router({
           }
         },
         {
-          path: 'WebShopList/WebShopAdd',
+          path: '/WebShopList/WebShopAdd',
           name: 'WebShopAdd',
           component: WebShopAdd,
           meta: {
@@ -316,7 +316,7 @@ export default new Router({
           }
         },
         {
-          path: 'WebNewsManagrer',
+          path: '/WebNewsManagrer',
           name: 'WebNewsManagrer',
           component: WebNewsManagrer,
           meta: {
@@ -325,7 +325,7 @@ export default new Router({
           }
         },
         {
-          path: 'WebNewsManagrer/WebNewsAdd',
+          path: '/WebNewsManagrer/WebNewsAdd',
           name: 'WebNewsAdd',
           component: WebNewsAdd,
           meta: {
@@ -334,7 +334,7 @@ export default new Router({
           }
         },
         {
-          path: 'WebArtManagrer',
+          path: '/WebArtManagrer',
           name: 'WebArtManagrer',
           component: WebArtManagrer,
           meta: {
@@ -343,7 +343,7 @@ export default new Router({
           }
         },
         {
-          path: 'WebArtManagrer/WebArtAdd',
+          path: '/WebArtManagrer/WebArtAdd',
           name: 'WebArtAdd',
           component: WebArtAdd,
           meta: {
@@ -352,7 +352,7 @@ export default new Router({
           }
         },
         {
-          path: 'BannerManagrer',
+          path: '/BannerManagrer',
           name: 'BannerManagrer',
           component: BannerManagrer,
           meta: {
@@ -361,7 +361,7 @@ export default new Router({
           }
         },
         {
-          path: 'LinkUs',
+          path: '/LinkUs',
           name: 'LinkUs',
           component: LinkUs,
           meta: {
@@ -370,7 +370,7 @@ export default new Router({
           }
         },
         {
-          path: 'AboutUs',
+          path: '/AboutUs',
           name: 'AboutUs',
           component: AboutUs,
           meta: {
@@ -379,7 +379,7 @@ export default new Router({
           }
         },
         {
-          path: 'BannerManagrer/WebsiteProductAdd',
+          path: '/BannerManagrer/WebsiteProductAdd',
           name: 'WebsiteProductAdd',
           component: WebsiteProductAdd,
           meta: {
