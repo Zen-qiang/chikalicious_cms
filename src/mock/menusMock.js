@@ -23,10 +23,10 @@ export default [
     ]
   },
   {
-    item: { title: '零食' },
+    item: { title: '周边' },
     subItems: [
-      { label: '零食分类', path: '/SnacksClassify', name: 'SnacksClassify' },
-      { label: '各地区零食管理', path: '/SnacksManage', name: 'SnacksManage' }
+      { label: '周边分类', path: '/SnacksClassify', name: 'SnacksClassify' },
+      { label: '各地区周边管理', path: '/SnacksManage', name: 'SnacksManage' }
       // { label: '各地区首页管理', path: '/SnacksHomepages', name: 'SnacksHomepages' }
     ]
   },
@@ -34,7 +34,7 @@ export default [
     item: { title: '订单' },
     subItems: [
       { label: '蛋糕订单管理', path: '/CakeOrders', name: 'CakeOrders' },
-      { label: '零食订单管理', path: '/SnackOrders', name: 'SnackOrders' },
+      { label: '周边订单管理', path: '/SnackOrders', name: 'SnackOrders' },
       { label: '厨房订单管理', path: '/KitchenOrders', name: 'KitchenOrders' },
       { label: '订单详情', path: '/CakeOrders/CakeOrderDetail', name: 'CakeOrderDetail', children: true },
       { label: '订单详情', path: '/SnackOrders/SnackOrderDetail', name: 'SnackOrderDetail', children: true },
@@ -60,7 +60,7 @@ export default [
     subItems: [
       { label: '平台销量情况', path: '/PlatFromSaleCount', name: 'PlatFromSaleCount' },
       { label: '蛋糕销售情况', path: '/CakeSaleCount', name: 'CakeSaleCount' },
-      { label: '零食销售情况', path: '/SnackSaleCount', name: 'SnackSaleCount' },
+      { label: '周边销售情况', path: '/SnackSaleCount', name: 'SnackSaleCount' },
       { label: '店铺销量统计', path: '/ShopSaleCount', name: 'ShopSaleCount' },
       { label: '会员购买统计', path: '/MerberSaleCount', name: 'MerberSaleCount' }
     ]
