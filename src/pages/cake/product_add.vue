@@ -474,7 +474,7 @@ export default {
         this.$Message.error('商品规格不能为空')
         return
       }
-      if (this.type === 'CAKE' && (!data.regionList || data.regionList.length === 0)) {
+      if (this.type === 'CAKE' && (!data.regionList || data.regionList.length === 0 || !data.regionList.shops || data.regionList.shops.length === 0)) {
         this.$Message.error('商品销售区域不能为空')
         return
       }
