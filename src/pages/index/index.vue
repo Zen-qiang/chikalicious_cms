@@ -26,7 +26,7 @@
             <Submenu v-if="menu.item.show"  v-for="(menu, index) of menusMock" :key="index" :name="index">
               <template slot="title">
                   <Icon type="ios-navigate"></Icon>
-                  {{menu.item.title}}
+                  <span :class="{'redPoint': menu.item.title === '订单' && hasPoint}">{{menu.item.title}}</span>
               </template>
               <MenuItem
                 v-for="(subMenu, idx) of menu.subItems"
@@ -34,7 +34,7 @@
                 :name="index + '-' + idx"
                 :to="subMenu.path"
                 v-if="!subMenu.children && subMenu.show"
-              >{{subMenu.label}}</MenuItem>
+              ><span>{{subMenu.label}}</span><i class="redNumber" v-if="menu.item.title === '订单' && fmOrderNumber[idx]">{{fmOrderNumber[idx]}}</i></MenuItem>
             </Submenu>
             <!-- <Submenu name="kf">
               <template slot="title">
@@ -72,7 +72,8 @@ export default {
       menusMock: JSON.parse(localStorage.getItem('menusMock')),
       selectMenu_index: 0,
       showPopbox: false,
-      userName: localStorage.getItem('session-token')
+      userName: localStorage.getItem('session-token'),
+      orderNumber: [0, 0, 0]
       // permissions: JSON.parse(localStorage.getItem('permissions')),
       // roles: JSON.parse(localStorage.getItem('roles'))
     }
@@ -113,6 +114,16 @@ export default {
     },
     activeName () {
       return this.menusMock[this.openNames].subItems.findIndex(item => item.name === this.firstRouterName)
+    },
+    hasPoint () {
+      return this.orderNumber.some(item => {
+        return item
+      })
+    },
+    fmOrderNumber () {
+      return this.orderNumber.map(item => {
+        return item > 99 ? '99+' : item
+      })
     }
   },
   methods: {
@@ -164,5 +175,34 @@ export default {
 }
 .layout-nav {
   position: relative;
+}
+.redPoint {
+  display: inline-block;
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    width: 8px;
+    height: 8px;
+    top: 0;
+    border-radius: 100%;
+    background: #ea3715;
+  }
+}
+.redNumber {
+  position: absolute;
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  background: #ea3715;
+  border-radius: 100%;
+  color: #fff;
+  font-size: 12px;
+  line-height: 22px;
+  margin-left: 4px;
+  font-style: normal;
+  transform: scale(.8);
 }
 </style>
