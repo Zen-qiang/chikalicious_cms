@@ -15,7 +15,7 @@
     </head-search>
     <section class="cakeNews-container">
       <div>
-        <Button type="primary" icon="md-add"  to="/WebNewsManagrer/WebNewsAdd">添加新闻</Button>
+        <Button type="primary" icon="md-add"  to="/WebArtManagrer/WebArtAdd">添加艺术</Button>
       </div>
       <div class="cakeNews-container-content">
         <Table border :loading="loading" :columns="columns" :data="newsData"></Table>

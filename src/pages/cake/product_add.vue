@@ -245,6 +245,7 @@ export default {
             status: 'finished',
             url: product.image
           })
+          this.previewObj['masterImg'] = product.image
           // 渲染顺序有问题
           // this.masterDefaultList.push({
           //   name: 'masterImg',
@@ -253,6 +254,7 @@ export default {
           if (images && images.length > 0) {
             for (let i in images) {
               let name = images[i].substring(images[i].lastIndexOf('/') + 1, images[i].lastIndexOf('.'))
+              this.previewObj[name] = images[i]
               // this.imagesDefaultList.push({
               //   name: name,
               //   url: images[i]
@@ -474,7 +476,7 @@ export default {
         this.$Message.error('商品规格不能为空')
         return
       }
-      if (this.type === 'CAKE' && (!data.regionList || data.regionList.length === 0 || !data.regionList.shops || data.regionList.shops.length === 0)) {
+      if (this.type === 'CAKE' && (!data.regionList || data.regionList.length === 0 || !data.regionList[0].shops || data.regionList[0].shops.length === 0)) {
         this.$Message.error('商品销售区域不能为空')
         return
       }
@@ -500,7 +502,13 @@ export default {
               this.$Message.warning(res.data.message)
             } else {
               this.$Message.success('保存成功')
-              this.$router.push({name: 'CakeManage'})
+              this.$router.go(-1)
+              // if (this.type === 'CAKE') {
+              //   this.$router.push({name: 'CakeManage'})
+              // } else if (this.type === 'SNACK') {
+              //   this.$router.go(-1)
+              //   // window.open('../SnacksManage', '_self')
+              // }
             }
           }).catch(err => {
             console.log(err)

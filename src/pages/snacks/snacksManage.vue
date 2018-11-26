@@ -125,12 +125,6 @@ export default {
         tooltip: true
       },
       {
-        title: '规格',
-        key: 'specValue',
-        align: 'center',
-        tooltip: true
-      },
-      {
         title: '原价',
         key: 'originalPrice',
         align: 'center',
@@ -183,7 +177,7 @@ export default {
                   console.log(params.row.onSale)
                   let status = params.row.onSale ? '2' : '1'
                   let text = params.row.onSale ? '下架' : '上架'
-                  this.updateProductStatus(params.row.id, status, text)
+                  this.updateProductStatus(params.row.regionProductId, status, text)
                 }
               }
             }, params.row.onSale ? '下架' : '重新上架'),
@@ -197,7 +191,7 @@ export default {
                   let status = params.row.onSale ? ((params.row.recommend || params.row.hotProduct) ? '4' : '5') : '7'
                   let text = params.row.onSale ? ((params.row.recommend || params.row.hotProduct) ? '取消首页显示' : '推荐上首页') : '删除'
                   if (status !== '5') {
-                    this.updateProductStatus(params.row.id, status, text)
+                    this.updateProductStatus(params.row.regionProductId, status, text)
                   } else {
                     this.id = params.row.id
                     this.recommendTypeModel = true

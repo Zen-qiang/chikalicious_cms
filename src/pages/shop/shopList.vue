@@ -28,18 +28,6 @@
             <Input v-model="name" placeholder="请填写店铺名称" clearable style="width: 200px" />
           </label>
         </p>
-        <!-- <p>
-          <label>
-            <span style="margin-right:10px;">门店地址</span>
-            <Input v-model="address" placeholder="门店地址" clearable style="width: 200px" />
-          </label>
-        </p>
-        <p>
-          <label>
-            <span style="margin-right:10px;">联系电话</span>
-            <Input v-model="contactNumber" placeholder="联系电话" clearable style="width: 200px" />
-          </label>
-        </p> -->
         <br/>
         <p>
           <label class="fx">
@@ -47,6 +35,26 @@
                 <region-select @getCurrentCity="getInputCurrentCity" style="width:80%"></region-select>
             </label>
         </p>
+        <br/>
+        <p>
+          <label>
+            <span style="margin-right:10px;">预定时间</span>
+            <Time-picker format="HH:mm" v-model="reserveTime" type="timerange" placement="bottom-end" placeholder="选择时间" style="width: 168px"></Time-picker>
+          </label>
+        </p>
+        <br/>
+        <p>
+          <label>
+            <span style="margin-right:10px;">取货时间时间</span>
+            <Time-picker format="HH:mm" v-model="pickupTime" type="timerange" placement="bottom-end" placeholder="选择时间" style="width: 168px"></Time-picker>
+          </label>
+        </p>
+        <!-- <p>
+          <label>
+            <span style="margin-right:10px;">联系电话</span>
+            <Input v-model="contactNumber" placeholder="联系电话" clearable style="width: 200px" />
+          </label>
+        </p> -->
       <div slot="footer">
           <Button type="text" size="large" @click="addProductTypeModel=false">取消</Button>
           <Button type="primary" size="large" @click="ok">确定</Button>
@@ -81,6 +89,8 @@ export default {
       name: null,
       address: null,
       contactNumber: null,
+      reserveTime: null,
+      pickupTime: null,
       columns: [
         {
           title: '序号',
@@ -110,6 +120,34 @@ export default {
           key: 'cityName',
           align: 'center',
           tooltip: true
+        },
+        {
+          title: '预定时间',
+          align: 'center',
+          width: 220,
+          render: (h, params) => {
+            return h('div', {
+              style: {
+                textAlign: 'center'
+              }
+            }, [
+              h('p', params.row.reserveStartTime + '——' + params.row.reserveEndTime)
+            ])
+          }
+        },
+        {
+          title: '取货时间',
+          align: 'center',
+          width: 220,
+          render: (h, params) => {
+            return h('div', {
+              style: {
+                textAlign: 'center'
+              }
+            }, [
+              h('p', params.row.pickupStartTime + '——' + params.row.pickupEndTime)
+            ])
+          }
         },
         {
           title: '操作',
@@ -232,7 +270,7 @@ export default {
     ok () {
       if (this.$lodash.isNull(this.fkRegionId)) {
         this.$Message.info('请选择城市')
-      } else if (!this.name) {
+      } else if (!this.name || this.$lodash.isNull(this.reserveTime) || this.$lodash.isNull(this.pickupTime)) {
         this.$Message.info('请补全表单')
       } else {
         this.$axios({
@@ -241,7 +279,11 @@ export default {
           data: {
             id: this.id,
             fkRegionId: this.fkRegionId,
-            name: this.name
+            name: this.name,
+            reserveStartTimeString: this.reserveTime[0],
+            reserveEndTimeString: this.reserveTime[1],
+            pickupStartTimeString: this.pickupTime[0],
+            pickupEndTimeString: this.pickupTime[1]
             // address: this.address,
             // contactNumber: this.contactNumber
           }

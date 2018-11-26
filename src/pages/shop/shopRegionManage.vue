@@ -31,7 +31,7 @@ export default {
   data () {
     return {
       regionDataInfoList: [],
-      checkIds: [34]
+      checkIds: []
     }
   },
   created () {
