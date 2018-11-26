@@ -47,6 +47,7 @@ export default {
       }, {
         title: '商品信息',
         align: 'center',
+        width: 300,
         render: (h, params) => {
           return h('div', {
             style: {
@@ -115,12 +116,6 @@ export default {
         width: 120,
         align: 'center',
         key: 'status'
-      }, {
-        title: '店铺名称',
-        sortable: true,
-        width: 200,
-        align: 'center',
-        key: 'shop'
       }, {
         title: '操作',
         align: 'center',

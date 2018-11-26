@@ -46,6 +46,7 @@ export default {
       }, {
         title: '商品信息',
         align: 'center',
+        width: 300,
         render: (h, params) => {
           return h('div', {
             style: {

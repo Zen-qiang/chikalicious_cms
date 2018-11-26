@@ -3,7 +3,7 @@
     <Layout class="my-layout">
       <Header class="my-header">
         <Menu mode="horizontal" theme="primary" class="fx fx-bt">
-          <div class="layout-logo">Chikslicious商城</div>
+          <div class="layout-logo">Chikalicious商城</div>
           <div class="layout-nav">
             <div @click.stop="showPopbox = !showPopbox">
               <span style="margin-right:10px">{{userName}}</span>
