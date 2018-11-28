@@ -66,7 +66,6 @@ export default {
   },
   methods: {
     change (data) {
-      console.log(data)
       this.formInline.content = data
     },
     toShowPreview () {
@@ -83,7 +82,6 @@ export default {
           id: this.routerParams
         }
       }).then(res => {
-        console.log(res.data)
         // this.loading = false
         if (res.data.code === 666) {
           this.formInline.title = res.data.data.title

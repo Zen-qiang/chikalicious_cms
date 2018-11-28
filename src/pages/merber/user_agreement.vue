@@ -41,7 +41,6 @@ export default {
     handleSubmit () {
       let formData = new FormData()
       formData.append('content', this.content)
-      console.log(this.content)
       if (this.content === null) {
         this.$Message.error('请填写内容!')
       } else {

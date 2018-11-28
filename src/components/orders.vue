@@ -3,7 +3,7 @@
     <head-search @hander-search="queryOrders">
       <Row :gutter="8">
         <Col span="24">
-          <RegionSelect @getCurrentCity="getCurrentCity" @getCurrentProvince="getCurrentProvince" :type="type"></RegionSelect>
+          <RegionSelect @getCurrentCity="getCurrentCity" @getCurrentProvince="getCurrentProvince" :type="type" :provinceIdByRole="provinceIdByRole" :cityIdByRole="cityIdByRole"></RegionSelect>
         </Col>
       </Row>
     </head-search>
@@ -115,11 +115,14 @@ export default {
       showExpress: false,
       expressParams: {},
       currentOrder: {},
-      selections: []
+      selections: [],
+      provinceIdByRole: null,
+      cityIdByRole: null
     }
   },
   created () {
     // console.log(this.params)
+    this.changeProvinceByRole()
     this.queryOrders()
   },
   methods: {
@@ -136,6 +139,16 @@ export default {
      */
     getCurrentCity (cityId) {
       this.params.cityId = cityId
+    },
+    changeProvinceByRole () {
+      if (localStorage.getItem('provinceId') !== 'null' && localStorage.getItem('cityId') !== 'null') {
+        if (localStorage.getItem('role') !== 'ADMIN') {
+          this.params.provinceId = localStorage.getItem('provinceId') === 'null' ? null : parseInt(localStorage.getItem('provinceId'))
+          this.params.cityId = localStorage.getItem('cityId') === 'null' ? null : parseInt(localStorage.getItem('cityId'))
+        }
+      }
+      this.provinceIdByRole = localStorage.getItem('provinceId') === 'null' ? -1 : parseInt(localStorage.getItem('provinceId'))
+      this.cityIdByRole = localStorage.getItem('cityId') === 'null' ? -1 : parseInt(localStorage.getItem('cityId'))
     },
     /**
      * @name  获取筛选时间区间

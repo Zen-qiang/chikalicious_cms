@@ -32,6 +32,14 @@ export default {
     cid: {
       type: Number,
       default: -1
+    },
+    provinceIdByRole: {
+      type: Number,
+      default: -1
+    },
+    cityIdByRole: {
+      type: Number,
+      default: -1
     }
   },
   watch: {
@@ -48,12 +56,19 @@ export default {
       provinceList: [],
       cityId: -1,
       cityList: [],
-      provinceDisable: this.type === 'SNACK' || false,
-      cityDisable: this.type === 'SNACK' || false
+      provinceDisable: false,
+      cityDisable: false
     }
   },
   created () {
     this.getProvinceList()
+    if (this.provinceIdByRole !== -1) {
+      this.getCityListByProvince()
+    }
+    if (this.provinceIdByRole !== -1 || this.type === 'SNACK') {
+      this.provinceDisable = true
+      this.cityDisable = true
+    }
   },
   methods: {
     getProvinceList () {
@@ -61,7 +76,6 @@ export default {
         if (res.data.code === 666) {
           this.provinceList = res.data.data
           if (this.provinceList && this.provinceList.length) {
-            console.log('provinceList loaded, set value')
             this.provinceId = this.pid
           }
         }
@@ -86,6 +100,10 @@ export default {
           if (this.cityList && this.cityList.length) {
             console.log('cityList loaded, set value')
             this.cityId = this.cid
+          }
+          if (this.provinceIdByRole !== -1 && this.cityIdByRole !== -1) {
+            this.provinceId = this.provinceIdByRole
+            this.cityId = this.cityIdByRole
           }
           // this.$emit('getCurrentCity', this.cityId, this.index)
         }

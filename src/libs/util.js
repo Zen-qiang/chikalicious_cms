@@ -2,7 +2,7 @@ let util = {
 
 }
 util.title = function (title) {
-  title = title ? title + '' : 'Chikslicious'
+  title = title ? title + '' : 'Chikalicious'
   window.document.title = title
 }
 

@@ -7,7 +7,7 @@
     <Row class="row-container">
       <Col span="2"><p class="row-label">商品分类：</p></Col>
       <Col span="12">
-        <CheckboxGroup v-model="fkCategoryIds" @on-change="checkCategory">
+        <CheckboxGroup v-model="fkCategoryIds">
           <Checkbox v-for="category in categoryList" :label="category.id" :key="category.id" style="margin-right:20px">{{category.value}}</Checkbox>
         </CheckboxGroup>
       </Col>
@@ -145,7 +145,7 @@
       <Col span="18">
         <Row class="row-container" :gutter="16" v-for="(item, index) of regionList" :label="item" :name="item + '_' + index" :key="index">
           <Col span="12">
-            <RegionSelect ref="regionSelect" @getCurrentProvince="getCurrentProvince" @getCurrentCity="getCurrentCity" :index="index" :pid="item.provinceId" :cid="item.fkRegionId"></RegionSelect>
+            <RegionSelect ref="regionSelect" @getCurrentProvince="getCurrentProvince" @getCurrentCity="getCurrentCity" :index="index" :pid="item.fkProvinceId" :cid="item.fkCityId"></RegionSelect>
           </Col>
           <Col span="4">
             <!-- 添加按钮 -->
@@ -224,7 +224,7 @@ export default {
   },
   methods: {
     getProductInfoById (id) {
-      this.$axios.get('/product/queryProductById', {
+      this.$axios.get('/product/searchRecommendProductById', {
         params: {
           id: id
         }
@@ -237,21 +237,20 @@ export default {
             this.$Message.warning('未找到相关商品数据')
             return
           }
-          let product = res.data.data.product
-          let categoryIds = res.data.data.categoryIds
-          let specificationIds = res.data.data.specificationIds
-          let regionShops = res.data.data.regionShops
+          let regionIds = JSON.parse(res.data.data.regionIds)
           let images = res.data.data.images
-          let showExpressPrice = res.data.data.showExpressPrice
-          let expressPrice = res.data.data.expressPrice
-          this.showExpressPrice = showExpressPrice
-          this.expressPrice = expressPrice
-          this.productName = product.name
+          this.productName = res.data.data.name
           // refs
           this.$refs.master.fileList.push({
             name: 'masterImg',
             status: 'finished',
-            url: product.image
+            url: res.data.data.imageUrl
+          })
+          // refs
+          this.$refs.hover.fileList.push({
+            name: 'masterImg',
+            status: 'finished',
+            url: res.data.data.hoverUrl
           })
           // 渲染顺序有问题
           // this.masterDefaultList.push({
@@ -273,34 +272,17 @@ export default {
             }
           }
           // 商品描述
-          this.content = product.content
-          this.$refs.editor.setValue(product.content)
+          this.content = res.data.data.connet
+          this.$refs.editor.setValue(res.data.data.connet)
           // 回显分类
-          if (categoryIds && categoryIds.length > 0) {
-            for (let i in categoryIds) {
-              this.fkCategoryIds.push(categoryIds[i])
-            }
-          }
+          this.fkCategoryIds = JSON.parse(res.data.data.categoryIds)
           // 回显规格
-          if (specificationIds && specificationIds.length > 0) {
-            for (let i in this.specList) {
-              for (let j in specificationIds) {
-                if (this.specList[i].id === specificationIds[j].fk_specification_id) {
-                  let data = this.specList[i]
-                  data.checked = true
-                  data.originalPrice = specificationIds[j].original_price
-                  data.preferentialPrice = specificationIds[j].preferential_price
-                  this.$set(this.specList, i, data)
-                }
-              }
-            }
-          }
+          this.fkSpecificationId = JSON.parse(res.data.data.specificationIds)
           // 回显地区
-          if (regionShops && regionShops.length > 0) {
-            for (let i in regionShops) {
-              this.$set(this.regionList, i, regionShops[i])
-            }
-          }
+          this.regionList = regionIds
+          // 优惠价原价
+          this.originalPrice = res.data.data.originalPrice
+          this.preferentialPrice = res.data.data.preferentialPrice
         }
       }).catch(err => {
         console.log(err)
@@ -308,12 +290,6 @@ export default {
     },
     changeOnSaleTime (val1) {
       this.onSaleTime = val1
-    },
-    /**
-     * @name  勾选分类
-     */
-    checkCategory () {
-      // console.log(this.fkCategoryIds)
     },
     /**
      * @name  修改富文本
@@ -363,6 +339,8 @@ export default {
      * @name  获取当前省
      */
     getCurrentProvince (provinceId) {
+      // 保存最后选中地区下标
+      this.regionList[this.lastSelectRegionIndex].fkProvinceId = provinceId
     },
     /**
      * @name  获取当前城市
@@ -372,7 +350,7 @@ export default {
     getCurrentCity (cityId, index) {
       // 保存最后选中地区下标
       this.lastSelectRegionIndex = index
-      this.regionList[index].fkRegionId = cityId
+      this.regionList[index].fkCityId = cityId
     },
     /**
      * @name  添加地区下拉

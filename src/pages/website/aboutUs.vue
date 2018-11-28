@@ -116,7 +116,6 @@ export default {
       } else {
         this.$Message.warning('至少需要一张图片')
       }
-      console.log(index)
     },
     /**
     * 图片上传相关方法

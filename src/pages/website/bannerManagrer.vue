@@ -20,6 +20,8 @@
     <section class="cakeNews-container">
       <div>
         <Button type="primary" icon="md-add" :to="{name: 'WebsiteProductAdd', params: {type: 'CAKE'}}" >新增商品</Button>
+            <span>是否首页商品：</span>
+            <i-switch v-model="isIndexProduct" @on-change="changeIsIndexSatus"/>
       </div>
       <div class="cakeNews-container-content">
         <Table border :columns="recommendColumns" :data="recommendDataInfo"></Table>
@@ -104,6 +106,7 @@ export default {
       recommendTotal: 0,
       recommendOffset: 0,
       recommendLimit: 10,
+      isIndexProduct: false,
       loading: false,
       addRegionShopModel: false,
       addremcondModel: false,
@@ -166,7 +169,6 @@ export default {
           title: 'banner图片',
           align: 'center',
           render: (h, params) => {
-            console.log(params)
             return h('div', {
               style: {
                 display: 'table-cell',
@@ -346,38 +348,123 @@ export default {
           align: 'center',
           width: 160,
           render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'text'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.addremcondModel = true
-                    this.$axios.get('/product/searchRecommendProductById', {
-                      params: {
-                        id: params.row.id
-                      }
-                    }).then(res => {
-                      if (res.data.code === 666) {
-                        this.id = res.data.data.id
-                        this.productFormInline.name = res.data.data.name
-                        this.productFormInline.orderno = res.data.data.orderNo
-                        this.productFormInline.src = res.data.data.imageUrl
-                        this.productFormInline.hoverSrc = res.data.data.hoverUrl
-                        this.productFormInline.redirectUrl = res.data.data.redirectUrl
-                      }
-                    }).catch(err => {
-                      console.log(err)
-                      this.loading = false
-                    })
+            if (this.isIndexProduct) {
+              return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'success',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.addremcondModel = true
+                      this.$axios.get('/product/searchRecommendProductById', {
+                        params: {
+                          id: params.row.id
+                        }
+                      }).then(res => {
+                        if (res.data.code === 666) {
+                          this.id = res.data.data.id
+                          this.productFormInline.name = res.data.data.name
+                          this.productFormInline.orderno = res.data.data.orderNo
+                          this.productFormInline.src = res.data.data.imageUrl
+                          this.productFormInline.hoverSrc = res.data.data.hoverUrl
+                          this.productFormInline.redirectUrl = res.data.data.redirectUrl
+                        }
+                      }).catch(err => {
+                        console.log(err)
+                        this.loading = false
+                      })
+                    }
                   }
-                }
-              }, '修改')
-            ])
+                }, '编辑')
+              ])
+            } else if (!params.row.recommend) {
+              return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'text'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.$router.push({
+                        name: 'WebsiteProductAdd',
+                        params: {
+                          id: params.row.id,
+                          type: 'CAKE'
+                        }
+                      })
+                    }
+                  }
+                }, '修改'),
+                h('Button', {
+                  props: {
+                    type: 'success',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.$Modal.confirm({
+                        title: '确定推荐该商品上首页吗？',
+                        onOk: () => {
+                          this.$axios({
+                            url: '/product/updateWebSiteProductStatusById',
+                            method: 'post',
+                            data: {
+                              _method: 'put',
+                              id: params.row.id
+                            }
+                          }).then(result => {
+                            let code = result.data.code
+                            if (code === 666) {
+                              this.$Message.success('操作成功')
+                              this.getRecommendDataInfo()
+                            } else {
+                              this.$Message.warning(result.data.message)
+                            }
+                          }).catch(err => {
+                            this.loading = false
+                            console.log(err)
+                            this.$Message.error('操作失败')
+                          })
+                        }
+                      })
+                    }
+                  }
+                }, '推荐上首页')
+              ])
+            } else {
+              return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'text'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.$router.push({
+                        name: 'WebsiteProductAdd',
+                        params: {
+                          id: params.row.id,
+                          type: 'CAKE'
+                        }
+                      })
+                    }
+                  }
+                }, '修改')
+              ])
+            }
           }
         }
       ]
@@ -433,7 +520,8 @@ export default {
       this.$axios.get('/product/searchRecommendProduct', {
         params: {
           offset: this.recommendOffset,
-          limit: this.recommendLimit
+          limit: this.recommendLimit,
+          recommend: this.isIndexProduct
         }
       }).then(res => {
         this.loading = false
@@ -444,6 +532,10 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    changeIsIndexSatus (status) {
+      this.offset = 0
+      this.getRecommendDataInfo()
     },
     deleteShopById (id, type) {
       let messageText = '是否删除该banner'

@@ -43,6 +43,7 @@
               </template>
               <MenuItem name="" ></MenuItem>
             </Submenu> -->
+            <audio ref="notice" src="http://chikalicious-oss.oss-cn-shanghai.aliyuncs.com/web_content/remind.mp3"></audio>
           </Menu>
         </Sider>
         <Layout :style="{padding: '0 24px 24px'}">
@@ -73,10 +74,18 @@ export default {
       selectMenu_index: 0,
       showPopbox: false,
       userName: localStorage.getItem('session-token'),
-      orderNumber: [0, 0, 0]
+      orderNumber: [0, 0, 0],
+      auObj: null,
+      timer: null
       // permissions: JSON.parse(localStorage.getItem('permissions')),
       // roles: JSON.parse(localStorage.getItem('roles'))
     }
+  },
+  created () {
+    this.getListIng()
+  },
+  destroyed () {
+    if (this.timer) clearInterval(this.timer)
   },
   computed: {
     // 左侧菜单选中
@@ -127,6 +136,54 @@ export default {
     }
   },
   methods: {
+    getListIng () {
+      if (localStorage.getItem('role') !== 'ADMIN') {
+        this.timer = setInterval(() => {
+          this.$axios.get('/admin/queryRemindMessage', {}).then(res => {
+            if (res.data.code === 666) {
+              // 是否播放音频
+              let isAudio = false
+              // 门店管理员
+              if (localStorage.getItem('role') === 'SHOP') {
+                this.orderNumber = [res.data.data.cakeRemindCount, res.data.data.snackRemindCount, res.data.data.kitChenCount]
+                if (res.data.data.cakeRemindCount !== 0) {
+                  isAudio = true
+                  this.$Notice.info({
+                    title: '蛋糕订单',
+                    desc: '您有' + res.data.data.cakeRemindCount + '新订单'
+                  })
+                }
+                if (res.data.data.comRemindCount !== 0) {
+                  isAudio = true
+                  this.$Notice.info({
+                    title: '确认收货',
+                    desc: '您有' + res.data.data.comRemindCount + '笔订单确认收货'
+                  })
+                }
+              }
+              // 厨房管理员
+              if (localStorage.getItem('role') === 'KITCHEN') {
+                if (res.data.data.kitChenCount !== 0) {
+                  this.orderNumber = [0, 0, res.data.data.kitChenCount]
+                  this.$Notice.info({
+                    title: '厨房订单',
+                    desc: '您有' + res.data.data.kitChenCount + '新订单'
+                  })
+                  isAudio = true
+                }
+              }
+              if (isAudio) {
+                this.$nextTick(() => {
+                  this.$refs.notice.play()
+                })
+              }
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        }, 60000)
+      }
+    },
     getSelect (val) {
       let index = this.$lodash.head(this.$lodash.split(val, '-', 1))
       this.selectMenu_index = this.$lodash.toNumber(index)
@@ -139,7 +196,7 @@ export default {
       switch (name) {
         case 'logout':
           this.$axios.get('/logout').then(res => {
-            window.localStorage.removeItem('session-token')
+            window.localStorage.clear()
             this.$router.replace({name: 'Login'})
           }).catch(err => {
             console.error(err)

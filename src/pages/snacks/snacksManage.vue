@@ -174,7 +174,6 @@ export default {
               },
               on: {
                 click: () => {
-                  console.log(params.row.onSale)
                   let status = params.row.onSale ? '2' : '1'
                   let text = params.row.onSale ? '下架' : '上架'
                   this.updateProductStatus(params.row.regionProductId, status, text)

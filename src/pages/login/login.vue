@@ -79,6 +79,9 @@ export default {
           }
           this.processMenuMock()
           window.localStorage.setItem('menusMock', JSON.stringify(this.menusMock))
+          window.localStorage.setItem('provinceId', result.data.data.provinceId)
+          window.localStorage.setItem('cityId', result.data.data.cityId)
+          window.localStorage.setItem('role', this.roles[0])
           this.$Message.success('登陆成功')
           this.$router.replace({name: this.redirect})
         } else {
@@ -94,7 +97,7 @@ export default {
       this.menusMock.forEach(menu => {
         let show = false
         menu.subItems.forEach(subItem => {
-          // console.log(subItem.name, subItem.label)
+          subItem.show = false
           if (this.permissions.indexOf(subItem.name) > -1 || (this.roles[0] === 'ADMIN')) {
             subItem.show = true
             if (this.redirect === 'Index') {

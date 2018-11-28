@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     change (data) {
-      console.log(data)
       this.formInline.content = data
     },
     getShopInfo () {
@@ -80,7 +79,6 @@ export default {
           id: this.routerParams
         }
       }).then(res => {
-        console.log(res.data)
         // this.loading = false
         if (res.data.code === 666) {
           this.id = res.data.data.id

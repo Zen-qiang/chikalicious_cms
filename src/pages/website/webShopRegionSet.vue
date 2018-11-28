@@ -51,7 +51,6 @@ export default {
   },
   methods: {
     change (data) {
-      console.log(data)
       this.formInline.content = data
     },
     getNewInfo () {
@@ -61,7 +60,6 @@ export default {
           id: this.routerParams
         }
       }).then(res => {
-        console.log(res.data)
         // this.loading = false
         if (res.data.code === 666) {
           this.formInline.title = res.data.data.title
@@ -88,7 +86,6 @@ export default {
         formData.append('title', this.formInline.title)
         formData.append('file', this.formInline.file)
         formData.append('content', this.formInline.content)
-        console.log(formData.get('file'))
         if (valid) {
           this.$axios({
             url: '/product/saveNews',

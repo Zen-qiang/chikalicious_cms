@@ -4,6 +4,9 @@
       <FormItem label="店铺名称" prop='name'>
         <Input type='text' v-model='formInline.name' placeholder='店铺名称' />
       </FormItem>
+      <FormItem label="店铺英文名称" prop='label'>
+        <Input type='text' v-model='formInline.label' placeholder='店铺名称' />
+      </FormItem>
       <FormItem label="地址" prop='fkRegionId'>
         <Row :gutter="16">
           <Col span="8">
@@ -24,8 +27,8 @@
       <FormItem label="联系电话" prop='contactNumber'>
         <Input type='text' v-model='formInline.contactNumber' placeholder='联系电话' />
       </FormItem>
-      <FormItem label="营业时间" prop='releaseFormTime'>
-        <DatePicker type="date" format="yyyy-MM-dd" placeholder="营业时间" style="width: 200px" v-model="formInline.releaseFormTime"></DatePicker>
+      <FormItem label="营业时间" prop='businessHours'>
+        <Input type='text' v-model='formInline.businessHours' placeholder='联系电话' />
       </FormItem>
       <FormItem label="封面图">
         <input id='fileinput' style='display:block' @change='uploading($event, 1)' type='file' accept='image/*' />
@@ -65,16 +68,18 @@ export default {
         contactNumber: '',
         content: '',
         id: '',
-        releaseFormTime: null,
+        businessHours: null,
         cover: null,
-        hoverUrl: null
+        hoverUrl: null,
+        label: null
       },
       ruleInline: {
         name: [{ required: true, message: '请输入店铺名称', trigger: 'blur' }],
+        label: [{ required: true, message: '请输入店铺英文名称', trigger: 'blur' }],
         fkRegionId: [{required: true, message: '请输入店铺地址', trigger: 'change', type: 'number'}],
         address: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
         contactNumber: [{ required: true, message: '请输入联系电话', trigger: 'blur' }],
-        releaseFormTime: [{required: true, message: '请输入营业时间', trigger: 'change', type: 'date'}]
+        businessHours: [{required: true, message: '请输入营业时间', trigger: 'blur'}]
       }
     }
   },
@@ -85,14 +90,10 @@ export default {
   computed: {
     routerParams () {
       return this.$route.params.id
-    },
-    releaseTime () {
-      return this.formInline.releaseFormTime ? this.$moment(this.formInline.releaseFormTime).format('YYYY-MM-DD') : null
     }
   },
   methods: {
     change (data) {
-      console.log(data)
       this.formInline.description = data
     },
     getShopInfo () {
@@ -102,11 +103,12 @@ export default {
           id: this.routerParams
         }
       }).then(res => {
-        console.log(res.data)
         // this.loading = false
         if (res.data.code === 666) {
           this.id = res.data.data.id
           this.formInline.name = res.data.data.name
+          this.formInline.label = res.data.data.label
+          this.formInline.businessHours = res.data.data.businessHours
           this.formInline.address = res.data.data.address
           this.provinceId = res.data.data.provinceId
           this.getCityListByProvince()
@@ -162,8 +164,11 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate(valid => {
         var formData = new FormData()
+        formData.append('shopType', 'WEBSITESHOP')
         formData.append('id', this.id)
         formData.append('name', this.formInline.name)
+        formData.append('label', this.formInline.label)
+        formData.append('businessHours', this.formInline.businessHours)
         formData.append('address', this.formInline.address)
         formData.append('fkRegionId', this.formInline.fkRegionId)
         formData.append('contactNumber', this.formInline.contactNumber)

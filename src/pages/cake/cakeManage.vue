@@ -208,7 +208,6 @@ export default {
               on: {
                 click: () => {
                   // 1上架 2下架 4取消首页显示 5推荐上首页 7删除
-                  console.log(params.row.onSale)
                   let status = params.row.onSale ? '2' : '1'
                   let text = params.row.onSale ? '下架' : '上架'
                   this.updateProductStatus(params.row.regionProductId, status, text)
