@@ -25,9 +25,9 @@
       <Col span="2">
         <h2>商品信息：</h2>
       </Col>
-      <Col span="8">
+      <Col span="12">
         <Row v-for="(item, index) of data.product" :key="index" >
-          <Col span="7">
+          <Col span="7" style="width:130px">
             <img :src="item.imageUrl" style="width: 120px" />
           </Col>
           <Col span="16">
