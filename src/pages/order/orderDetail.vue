@@ -15,7 +15,7 @@
       <Col span="6">
         <Row><span>交易号：</span><span>{{data.orderNumber}}</span></Row>
         <Row><span>下单时间：</span><span>{{data.orderTime}}</span></Row>
-        <Row><span>取货时间：</span><span>{{data.extractTime}}</span></Row>
+        <Row><span>提货时间：</span><span>{{data.extractTime}}</span></Row>
       </Col>
       <Col span="2">
         <Button type="success" v-if="showPrintButton" size="small" @click="printOrder">打印订单</Button>
@@ -49,7 +49,10 @@
     </Row>
     <Divider/>
     <Row><Col span="2"><h2>是否需要发票：</h2></Col><Col span="8"><p>{{data.needInvoice}}</p></Col></Row>
-    <Row><Col span="2"><h2>发票抬头：</h2></Col><Col span="8"><p>{{data.invoiceTitle}}</p></Col></Row>
+    <Row><Col span="2"><h2>名称：</h2></Col><Col span="8"><p>{{data.invoiceTitle}}</p></Col></Row>
+    <Row><Col span="2"><h2>纳税人识别号：</h2></Col><Col span="8"><p>{{data.invoiceNo}}</p></Col></Row>
+    <Row><Col span="2"><h2>地址、电话：</h2></Col><Col span="8"><p>{{data.invoiceAddress}}</p></Col></Row>
+    <Row><Col span="2"><h2>开户行及账号：</h2></Col><Col span="8"><p>{{data.invoiceBankAccount}}</p></Col></Row>
     <Row v-if="showExpressInfo"><Col span="2"><h2>物流公司：</h2></Col><Col span="8"><p>{{data.expressCompany}}</p></Col></Row>
     <Row v-if="showExpressInfo"><Col span="2"><h2>物流单号：</h2></Col><Col span="8"><p>{{data.waybillNum}}</p></Col></Row>
     <Row>

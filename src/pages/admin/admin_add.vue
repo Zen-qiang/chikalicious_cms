@@ -24,7 +24,7 @@
               </Select>
               </Col>
               <Col span="8">
-              <Select v-model="cityId" filterable clearable @on-change="$emit('getCurrentCity', cityId)" placeholder="请选择城市">
+              <Select v-model="cityId" filterable clearable placeholder="请选择城市">
                 <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.value }}</Option>
               </Select>
               </Col>

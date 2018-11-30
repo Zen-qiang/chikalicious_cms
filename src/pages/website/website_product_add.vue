@@ -5,6 +5,10 @@
       <Col span="12"><Input type='text' v-model="productName" icon="md-medical" placeholder='商品标题名称长度至少3个字符，最长50个汉字' /></Col>
     </Row>
     <Row class="row-container">
+      <Col span="2"><p class="row-label">商品名称描述：</p></Col>
+      <Col span="12"><Input type='text' v-model="description" icon="md-medical" placeholder='商品标题名称长度至少3个字符，最长50个汉字' /></Col>
+    </Row>
+    <Row class="row-container">
       <Col span="2"><p class="row-label">商品分类：</p></Col>
       <Col span="12">
         <CheckboxGroup v-model="fkCategoryIds">
@@ -215,7 +219,8 @@ export default {
       previewUrl: '',
       masterDefaultList: [],
       hoverDefaultList: [],
-      imagesDefaultList: []
+      imagesDefaultList: [],
+      description: null
     }
   },
   created () {
@@ -281,6 +286,7 @@ export default {
           // 回显地区
           this.regionList = regionIds
           // 优惠价原价
+          this.description = res.data.data.description
           this.originalPrice = res.data.data.originalPrice
           this.preferentialPrice = res.data.data.preferentialPrice
         }
@@ -390,6 +396,7 @@ export default {
       params.regionList = this.regionList
       params.originalPrice = this.originalPrice
       params.preferentialPrice = this.preferentialPrice
+      params.description = this.description
       return params
     },
     /**
@@ -400,6 +407,10 @@ export default {
       // 数据校验
       if (!data.name) {
         this.$Message.error('商品名称不能为空')
+        return
+      }
+      if (!data.description) {
+        this.$Message.error('商品描述不能为空')
         return
       }
       if (!data.type) {
@@ -419,11 +430,15 @@ export default {
         return
       }
       if (this.hoverList === null || this.hoverList.length === 0) {
-        this.$Message.error('商品主图不能为空')
+        this.$Message.error('商品hover图不能为空')
         return
       }
       if (this.uploadList === null || this.uploadList.length === 0) {
         this.$Message.error('商品图片不能为空')
+        return
+      }
+      if (this.regionList.length === 0) {
+        this.$Message.error('商品销售区域不能为空')
         return
       }
       this.$Modal.confirm({

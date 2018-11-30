@@ -137,7 +137,7 @@ export default {
         orderno: [{required: true, message: '请选择排序', trigger: 'blur'}]
       },
       ruleInline: {
-        name: [{ required: true, message: '请输入banner描述', trigger: 'blur' }],
+        bannerDescription: [{ required: true, message: '请输入banner描述', trigger: 'blur' }],
         redirectUrl: [{ required: true, message: '请输入跳转地址', trigger: 'blur' }],
         orderno: [{required: true, message: '请输入排序', trigger: 'blur'}]
       },
@@ -641,7 +641,7 @@ export default {
           this.$Message.info('请上传文件')
         } else if (valid) {
           let formData = new FormData()
-          formData.append('id', this.id)
+          if (this.id !== null) formData.append('id', this.id)
           formData.append('bannerDescription', this.formInline.bannerDescription)
           formData.append('redirectUrl', this.formInline.redirectUrl)
           formData.append('orderno', this.formInline.orderno)

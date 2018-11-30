@@ -38,7 +38,7 @@
     </section>
     <Modal
         v-model="addRegionShopModel"
-        title="保存商品分类"
+        title="保存城市设置"
         @on-ok="ok"
         @on-cancel="cancel">
         <p>
@@ -75,6 +75,12 @@
       </Modal>
   </div>
       </TabPane>
+      <TabPane label="店铺banner图">
+                 <div class="cakeNews">
+        <input id='fileinput' style='display:block' @change='uploading($event)' type='file' accept='image/*' />
+        <img :src='coverSrc' :style="{width: coverSrc ? '800px' : '', height: coverSrc ? '500px' : ''}"/>
+                 </div>
+      </TabPane>
   </Tabs>
 </template>
 <script>
@@ -109,6 +115,8 @@ export default {
       newsTime: null,
       address: null,
       cityAddress: [],
+      coverSrc: null,
+      cover: null,
       columns: [
         {
           title: '序号',
@@ -273,6 +281,7 @@ export default {
     this.getShopDataInfo()
     this.getRegionSetShopDataInfo()
     this.getProvinceList()
+    this.getShopBannerInfo()
   },
   methods: {
     search () {
@@ -363,6 +372,16 @@ export default {
         this.loading = false
       })
     },
+    getShopBannerInfo () {
+      this.$axios.get('/website/searchShopBanner', {
+        params: {}
+      }).then(res => {
+        this.coverSrc = res.data.message
+      }).catch(err => {
+        console.log(err)
+        this.loading = false
+      })
+    },
     deleteShopById (id, type) {
       let messageText = ''
       if (type === 'fk_region_id') {
@@ -419,6 +438,37 @@ export default {
     },
     getInputCurrentCity (data) {
       this.fkRegionId = data
+    },
+    uploading (event) {
+      // 获取文件
+      var windowURL = window.URL || window.webkitURL
+      this.cover = event.target.files[0] // 创建图片文件的url
+      this.coverSrc = windowURL.createObjectURL(event.target.files[0])
+      var formData = new FormData()
+      formData.append('bannerFile', this.cover)
+      if (this.cover !== null) {
+        this.$axios({
+          url: '/shop/saveShopBanner',
+          method: 'post',
+          data: formData,
+          processData: false,
+          contentType: false,
+          headers: {'Content-Type': 'multipart/form-data'}
+        }).then(result => {
+          let code = result.data.code
+          if (code === 666) {
+            this.$Message.success('保存成功')
+          } else {
+            this.$Message.warning(result.data.message)
+          }
+        }).catch(err => {
+          this.loading = false
+          console.log(err)
+          this.$Message.error('系统异常,请联系管理员')
+        })
+      } else {
+        this.$Message.error('请选择文件!')
+      }
     },
     ok () {
       if (this.$lodash.isNull(this.cityId) || this.$lodash.isNull(this.addressForm[0].name)) {

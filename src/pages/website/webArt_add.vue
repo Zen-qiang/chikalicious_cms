@@ -4,6 +4,9 @@
       <FormItem prop='title' label="标题">
         <Input type='text' v-model='formInline.title' placeholder='title' />
       </FormItem>
+      <FormItem prop='description' label="描述">
+        <Input type='text' v-model='formInline.description' placeholder='描述' />
+      </FormItem>
       <FormItem label="封面图">
         <input id='fileinput' style='display:block' @change='uploading($event, 1)' type='file' accept='image/*' />
         <img :src='coverSrc' :style="{width: coverSrc ? '100px' : '', height: coverSrc ? '100px' : ''}"/>
@@ -35,18 +38,20 @@ export default {
     return {
       src: '',
       isClear: false,
-      coverSrc: '',
-      hoverUrlSrc: '',
+      coverSrc: null,
+      hoverUrlSrc: null,
       showPreview: false,
       formInline: {
         title: '',
         surfacePlotFile: '',
         hoverFile: '',
         content: '',
-        id: ''
+        id: '',
+        description: null
       },
       ruleInline: {
         title: [{ required: true, message: '请输入新闻标题', trigger: 'blur' }],
+        description: [{ required: true, message: '请输入描述', trigger: 'blur' }],
         content: [
           { required: true, message: '请输入新闻内容', trigger: 'blur' }
         ]
@@ -89,6 +94,7 @@ export default {
           this.formInline.id = res.data.data.id
           this.hoverUrlSrc = res.data.data.hoverUrl
           this.coverSrc = res.data.data.surfacePlot
+          this.formInline.description = res.data.data.description
         }
       }).catch(err => {
         console.log(err)
@@ -114,6 +120,7 @@ export default {
         formData.append('surfacePlotFile', this.formInline.surfacePlotFile)
         formData.append('hoverUrlFile', this.formInline.hoverFile)
         formData.append('content', this.formInline.content)
+        formData.append('description', this.formInline.description)
         formData.append('type', 'ARTS')
         if (valid) {
           this.$axios({

@@ -4,6 +4,20 @@
       <FormItem prop='title'>
         <Input type='text' v-model='formInline.title' placeholder='title' />
       </FormItem>
+      <FormItem prop='title'>
+      <Row :gutter="16">
+          <Col span="8">
+            <Select v-model="provinceId" filterable clearable @on-change="getCityListByProvince()" placeholder="请选择省份">
+                <Option v-for="item in provinceList" :value="item.id" :key="item.id">{{ item.value }}</Option>
+              </Select>
+              </Col>
+              <Col span="8">
+              <Select v-model="cityId" filterable clearable @on-change="$emit('getCurrentCity', cityId)" placeholder="请选择城市">
+                <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.value }}</Option>
+              </Select>
+              </Col>
+              </Row>
+       </FormItem>
       <FormItem prop='type'>
         <Select v-model="formInline.type" filterable clearable placeholder="请选择类型" >
           <Option  value="href" key="href">跳转链接</Option>
@@ -36,6 +50,10 @@ export default {
     return {
       src: '',
       isClear: false,
+      provinceId: null,
+      provinceList: [],
+      cityList: [],
+      cityId: null,
       formInline: {
         title: '',
         file: null,
@@ -46,14 +64,15 @@ export default {
       },
       ruleInline: {
         title: [{ required: true, message: '请输入新闻标题', trigger: 'blur' }],
-        target: [{ required: true, message: '请输入跳转链接', trigger: 'blur' }],
-        type: [{required: true, message: '请选择类型', trigger: 'change'}],
+        // target: [{ required: true, message: '请输入跳转链接', trigger: 'blur' }],
+        // type: [{required: true, message: '请选择类型', trigger: 'change'}],
         content: [{required: true, message: '请输入新闻内容', trigger: 'blur'}]
       }
     }
   },
   created () {
     if (this.routerParams) this.getNewsInfo()
+    this.getProvinceList()
   },
   computed: {
     routerParams () {
@@ -79,7 +98,10 @@ export default {
           this.formInline.type = res.data.data.type
           this.formInline.target = res.data.data.target
           this.formInline.id = res.data.data.id
+          this.cityId = res.data.data.cityId
+          this.provinceId = res.data.data.provinceId
           this.src = res.data.data.imageUrl
+          this.getCityListByProvince()
         }
       }).catch(err => {
         console.log(err)
@@ -93,6 +115,30 @@ export default {
       this.formInline.file = event.target.files[0] // 创建图片文件的url
       this.src = windowURL.createObjectURL(event.target.files[0])
     },
+    getProvinceList () {
+      this.$axios.get('/common/queryRegionByRole', {
+        params: {}
+      }).then(res => {
+        if (res.data.code === 666) {
+          this.provinceList = res.data.data
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    getCityListByProvince () {
+      this.$axios.get('/common/queryCityIdByProvinceId', {
+        params: {
+          provinceId: this.provinceId
+        }
+      }).then(res => {
+        if (res.data.code === 666) {
+          this.cityList = res.data.data
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     handleSubmit (name) {
       this.$refs[name].validate(valid => {
         let formData = new FormData()
@@ -101,6 +147,7 @@ export default {
         formData.append('type', this.formInline.type)
         formData.append('target', this.formInline.target)
         formData.append('file', this.formInline.file)
+        formData.append('fkRegionId', this.cityId)
         formData.append('content', this.formInline.content)
         if (this.formInline.file === null && this.formInline.id === null) {
           this.$Message.error('请选择文件!')

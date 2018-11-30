@@ -105,7 +105,7 @@ export default {
       }).then(res => {
         // this.loading = false
         if (res.data.code === 666) {
-          this.id = res.data.data.id
+          this.formInline.id = res.data.data.id
           this.formInline.name = res.data.data.name
           this.formInline.label = res.data.data.label
           this.formInline.businessHours = res.data.data.businessHours
@@ -165,7 +165,7 @@ export default {
       this.$refs[name].validate(valid => {
         var formData = new FormData()
         formData.append('shopType', 'WEBSITESHOP')
-        formData.append('id', this.id)
+        formData.append('id', this.formInline.id)
         formData.append('name', this.formInline.name)
         formData.append('label', this.formInline.label)
         formData.append('businessHours', this.formInline.businessHours)

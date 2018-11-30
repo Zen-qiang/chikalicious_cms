@@ -81,7 +81,7 @@ export default {
       }).then(res => {
         // this.loading = false
         if (res.data.code === 666) {
-          this.id = res.data.data.id
+          this.formInline.id = res.data.data.id
           this.formInline.name = res.data.data.name
           this.formInline.address = res.data.data.address
           this.formInline.fkRegionId = res.data.data.fkRegionId
@@ -103,7 +103,7 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate(valid => {
         var formData = new FormData()
-        formData.append('id', this.id)
+        formData.append('id', this.formInline.id)
         formData.append('name', this.formInline.name)
         formData.append('address', this.formInline.address)
         formData.append('fkRegionId', this.formInline.fkRegionId)
