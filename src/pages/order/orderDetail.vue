@@ -15,6 +15,7 @@
       <Col span="6">
         <Row><span>交易号：</span><span>{{data.orderNumber}}</span></Row>
         <Row><span>下单时间：</span><span>{{data.orderTime}}</span></Row>
+        <Row><span>取货时间：</span><span>{{data.extractTime}}</span></Row>
       </Col>
       <Col span="2">
         <Button type="success" v-if="showPrintButton" size="small" @click="printOrder">打印订单</Button>
