@@ -15,13 +15,13 @@
     </section>
   </div>
   </TabPane>
-      <TabPane label="推荐商品展示">
+      <TabPane label="首页商品展示">
         <div class="cakeNews">
     <section class="cakeNews-container">
       <div>
         <Button type="primary" icon="md-add" :to="{name: 'WebsiteProductAdd', params: {type: 'CAKE'}}" >新增商品</Button>
-            <span>是否首页商品：</span>
-            <i-switch v-model="isIndexProduct" @on-change="changeIsIndexSatus"/>
+            <!-- <span>是否首页商品：</span>
+            <i-switch v-model="isIndexProduct" @on-change="changeIsIndexSatus"/> -->
       </div>
       <div class="cakeNews-container-content">
         <Table border :columns="recommendColumns" :data="recommendDataInfo"></Table>
@@ -356,7 +356,7 @@ export default {
                     size: 'small'
                   },
                   style: {
-                    marginRight: '5px'
+                    marginBottom: '15px'
                   },
                   on: {
                     click: () => {
@@ -380,36 +380,27 @@ export default {
                       })
                     }
                   }
-                }, '编辑')
-              ])
-            } else if (!params.row.recommend) {
-              return h('div', [
+                }, '编辑'),
                 h('Button', {
                   props: {
                     type: 'text'
                   },
-                  style: {
-                    marginRight: '5px'
-                  },
                   on: {
                     click: () => {
-                      this.$router.push({
-                        name: 'WebsiteProductAdd',
-                        params: {
-                          id: params.row.id,
-                          type: 'CAKE'
-                        }
-                      })
+                      this.deleteWebsiteProduct(params.row.id)
                     }
                   }
-                }, '修改'),
+                }, '删除')
+              ])
+            } else if (!params.row.recommend) {
+              return h('div', [
                 h('Button', {
                   props: {
                     type: 'success',
                     size: 'small'
                   },
                   style: {
-                    marginRight: '5px'
+                    marginBottom: '15px'
                   },
                   on: {
                     click: () => {
@@ -440,7 +431,36 @@ export default {
                       })
                     }
                   }
-                }, '推荐上首页')
+                }, '推荐上首页'),
+                h('Button', {
+                  props: {
+                    type: 'text'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.$router.push({
+                        name: 'WebsiteProductAdd',
+                        params: {
+                          id: params.row.id,
+                          type: 'CAKE'
+                        }
+                      })
+                    }
+                  }
+                }, '修改'),
+                h('Button', {
+                  props: {
+                    type: 'text'
+                  },
+                  on: {
+                    click: () => {
+                      this.deleteWebsiteProduct(params.row.id)
+                    }
+                  }
+                }, '删除')
               ])
             } else {
               return h('div', [
@@ -462,7 +482,17 @@ export default {
                       })
                     }
                   }
-                }, '修改')
+                }, '修改'),
+                h('Button', {
+                  props: {
+                    type: 'text'
+                  },
+                  on: {
+                    click: () => {
+                      this.deleteWebsiteProduct(params.row.id)
+                    }
+                  }
+                }, '删除')
               ])
             }
           }
@@ -555,6 +585,34 @@ export default {
             if (code === 666) {
               this.$Message.success('删除成功')
               this.getBannerDataInfo()
+            } else {
+              this.$Message.warning(result.data.message)
+            }
+          }).catch(err => {
+            this.loading = false
+            console.log(err)
+            this.$Message.error('删除失败')
+          })
+        }
+      })
+    },
+    deleteWebsiteProduct (id) {
+      let messageText = '是否删除该商品'
+      this.$Modal.confirm({
+        title: messageText,
+        onOk: () => {
+          this.$axios({
+            url: '/website/deleteWebsiteProduct',
+            method: 'post',
+            data: {
+              _method: 'delete',
+              id: id
+            }
+          }).then(result => {
+            let code = result.data.code
+            if (code === 666) {
+              this.$Message.success('删除成功')
+              this.getRecommendDataInfo()
             } else {
               this.$Message.warning(result.data.message)
             }

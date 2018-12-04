@@ -86,7 +86,7 @@ export default {
         },
         {
           title: '详细信息',
-          key: 'subject',
+          key: 'content',
           align: 'center',
           tooltip: true
         },
@@ -100,7 +100,7 @@ export default {
           title: '操作',
           key: 'action',
           align: 'center',
-          width: 150,
+          width: 200,
           render: (h, params) => {
             if (!params.row.isRead) {
               return h('div', [
@@ -120,7 +120,7 @@ export default {
                 }, '查看详情'),
                 h('Button', {
                   props: {
-                    type: 'info',
+                    type: 'success',
                     size: 'small'
                   },
                   style: {

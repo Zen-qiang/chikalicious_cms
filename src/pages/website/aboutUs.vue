@@ -42,7 +42,7 @@
     </Modal>
           <editor :isClear='isClear' :value='content' @change="change" ></editor>
           <Button type='primary' @click="handleSubmit('formInline')">保存</Button>
-          <Button type="primary" @click="toShowPreview()">预览</Button>
+          <!-- <Button type="primary" @click="toShowPreview()">预览</Button> -->
           <preview :imgs="imgs" :content="content" :showPreview.sync="showPreviewDiv"></preview>
   </div>
 </template>

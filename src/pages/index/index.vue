@@ -150,7 +150,7 @@ export default {
                   isAudio = true
                   this.$Notice.info({
                     title: '蛋糕订单',
-                    desc: '您有' + res.data.data.cakeRemindCount + '新订单'
+                    desc: '您有' + res.data.data.cakeRemindCount + '笔新订单'
                   })
                 }
                 if (res.data.data.comRemindCount !== 0) {
@@ -167,7 +167,7 @@ export default {
                   this.orderNumber = [0, 0, res.data.data.kitChenCount]
                   this.$Notice.info({
                     title: '厨房订单',
-                    desc: '您有' + res.data.data.kitChenCount + '新订单'
+                    desc: '您有' + res.data.data.kitChenCount + '笔新订单'
                   })
                   isAudio = true
                 }

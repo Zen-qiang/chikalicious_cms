@@ -20,7 +20,7 @@
       </FormItem>
       <FormItem>
           <Button type='primary' @click="handleSubmit('formInline')">保存</Button>
-          <Button type="primary" @click="toShowPreview()">预览</Button>
+          <!-- <Button type="primary" @click="toShowPreview()">预览</Button> -->
           <preview :imgs="imgs" :title="formInline.title" :content="formInline.content" :showPreview.sync="showPreview"></preview>
       </FormItem>
     </Form>

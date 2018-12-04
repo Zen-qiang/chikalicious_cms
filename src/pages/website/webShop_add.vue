@@ -38,9 +38,9 @@
         <input id='fileinput' style='display:block' @change='uploading($event, 2)' type='file' accept='image/*' />
         <img :src='hoverUrlSrc' :style="{width: hoverUrlSrc ? '100px' : '', height: hoverUrlSrc ? '100px' : ''}"/>
       </FormItem>
-        <FormItem  label="店铺描述" prop='description'>
+        <!-- <FormItem  label="店铺描述" prop='description'>
           <div><editor :value='formInline.description' :isClear='isClear' @change="change"></editor></div>
-      </FormItem>
+      </FormItem> -->
       <FormItem>
           <Button type='primary' @click="handleSubmit('formInline')">保存</Button>
       </FormItem>
