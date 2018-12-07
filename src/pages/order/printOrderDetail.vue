@@ -1,12 +1,22 @@
 <template>
   <div>
-    <h1 style="font-size:16px">订单详情</h1>
+  <div id="subOutputRank-print">
+   <Row>
+      <Col span="2"> &nbsp;</Col>
+    </Row>
+    <Row>
+      <Col span="2"> &nbsp;</Col>
+      <h1 style="font-size:16px">订单详情</h1>
+    </Row>
     <Divider/>
     <Row>
       <Col span="2">
+        &nbsp;
+      </Col>
+      <Col span="3">
         <h2>订单信息：</h2>
       </Col>
-      <Col span="8">
+      <Col span="6">
         <Row><span>订单编号：</span><span>{{data.orderNumber}}</span></Row>
         <Row><span>买家信息：</span><span>{{data.consigneeName}}</span></Row>
         <Row><span>买家留言：</span><span>{{data.note}}</span></Row>
@@ -16,20 +26,17 @@
         <Row><span>下单时间：</span><span>{{data.orderTime}}</span></Row>
         <Row><span>提货时间：</span><span>{{data.extractTime}}</span></Row>
       </Col>
-      <Col span="2">
-        <Button type="success" v-if="showPrintButton" size="small" @click="printOrder">打印订单</Button>
-      </Col>
     </Row>
     <Divider/>
     <Row>
       <Col span="2">
+      &nbsp;
+      </Col>
+      <Col span="3">
         <h2>商品信息：</h2>
       </Col>
-      <Col span="8">
+      <Col span="6">
         <Row v-for="(item, index) of data.product" :key="index" >
-          <Col span="7" style="width:130px">
-            <img :src="item.imageUrl" style="width: 120px" />
-          </Col>
           <Col span="16">
             <p>{{item.title}}</p>
             <Row>价格(元)：<span>{{item.price}}</span></Row>
@@ -47,51 +54,40 @@
       </Col>
     </Row>
     <Divider/>
-    <Row><Col span="2"><h2>是否需要发票：</h2></Col><Col span="8"><p>{{data.needInvoice}}</p></Col></Row>
-    <Row><Col span="2"><h2>名称：</h2></Col><Col span="8"><p>{{data.invoiceTitle}}</p></Col></Row>
-    <Row><Col span="2"><h2>纳税人识别号：</h2></Col><Col span="8"><p>{{data.invoiceNo}}</p></Col></Row>
-    <Row><Col span="2"><h2>地址、电话：</h2></Col><Col span="8"><p>{{data.invoiceAddress}}</p></Col></Row>
-    <Row><Col span="2"><h2>开户行及账号：</h2></Col><Col span="8"><p>{{data.invoiceBankAccount}}</p></Col></Row>
-    <Row v-if="showExpressInfo"><Col span="2"><h2>物流公司：</h2></Col><Col span="8"><p>{{data.expressCompany}}</p></Col></Row>
-    <Row v-if="showExpressInfo"><Col span="2"><h2>物流单号：</h2></Col><Col span="8"><p>{{data.waybillNum}}</p></Col></Row>
     <Row>
-      <Col span="2"><h2>订单状态：</h2></Col>
-      <Col span="2"><span>{{from === 'kitchen' ? data.productionStatus : data.status}}</span></Col>
-      <Button type="success" v-if="showExtractButton" size="small" @click="confirmReceipt">确认收货</Button>
-      <Button type="success" v-if="showDeliveryButton" size="small" @click="showExpressModal">确认发货</Button>
-      <Button type="success" v-if="showAcceptedButton" size="small" @click="acceptOrders">确认接受</Button>
-      <Button type="success" v-if="showFinishButton" size="small" @click="productionFinish">确认完成</Button>
+      <Col span="2">&nbsp;</Col>
+      <Col span="3"><h2>是否需要发票：</h2></Col><Col span="8"><p>{{data.needInvoice}}</p></Col>
     </Row>
-    <!-- 物流模态框 -->
-    <Modal v-model="showExpressDialog">
-      <div style="text-align:center;padding:10px">
-        <p>订单编号：<span>{{data.orderNumber}}</span></p>
-        <p>确认发货，请填写订单详情</p>
-      </div>
-      <Row style="text-align:center;margin:10px">
-        <Col span="6">快递选择：</Col>
-        <Col span="12">
-          <Select v-model="expressParams.expressCompany" style="width:200px" filterable>
-            <Option v-for="(item, index) in expressCompanyList" :value="item" :key="index">{{ item }}</Option>
-          </Select>
-        </Col>
-        <Col span="6">
-          <Icon type="md-medical" /><span style="margin-left:10px;color:red">必填</span>
-        </Col>
-      </Row>
-      <Row style="text-align:center;margin:10px">
-        <Col span="6">快递单号：</Col>
-        <Col span="12">
-          <Input v-model="expressParams.wayBillNum" style="width: 200px" clearable />
-        </Col>
-        <Col span="6">
-          <Icon type="md-medical" /><span style="margin-left:10px;color:red">必填</span>
-        </Col>
-      </Row>
-      <div slot="footer">
-        <Button type="success" size="large" long @click="confirmDelivery">确认发货</Button>
-      </div>
-    </Modal>
+    <Row>
+      <Col span="2">&nbsp;</Col>
+      <Col span="3"><h2>名称：</h2></Col><Col span="8"><p>{{data.invoiceTitle}}</p></Col>
+    </Row>
+    <Row>
+      <Col span="2">&nbsp;</Col>
+      <Col span="3"><h2>纳税人识别号：</h2></Col><Col span="8"><p>{{data.invoiceNo}}</p></Col></Row>
+    <Row>
+      <Col span="2">&nbsp;</Col>
+      <Col span="3"><h2>地址、电话：</h2></Col><Col span="8"><p>{{data.invoiceAddress}}</p></Col>
+    </Row>
+    <Row>
+      <Col span="2">&nbsp;</Col>
+      <Col span="3"><h2>开户行及账号：</h2></Col><Col span="8"><p>{{data.invoiceBankAccount}}</p></Col>
+    </Row>
+    <Row v-if="showExpressInfo">
+      <Col span="2">&nbsp;</Col>
+      <Col span="3"><h2>物流公司：</h2></Col><Col span="8"><p>{{data.expressCompany}}</p></Col>
+    </Row>
+    <Row v-if="showExpressInfo">
+      <Col span="2">&nbsp;</Col>
+      <Col span="3"><h2>物流单号：</h2></Col><Col span="8"><p>{{data.waybillNum}}</p></Col>
+    </Row>
+    <Row>
+      <Col span="2">&nbsp;</Col>
+      <Col span="3"><h2>订单状态：</h2></Col>
+      <Col span="2"><span>{{from === 'kitchen' ? data.productionStatus : data.status}}</span></Col>
+    </Row>
+    </div>
+    <Button type="success" size="small" @click="printOrderDetail">打印订单</Button>
   </div>
 </template>
 <script>
@@ -103,12 +99,12 @@ export default {
     return {
       // 参数
       params: {
-        id: this.$route.params.id
+        id: this.$route.query.id
       },
       expressParams: {},
       expressCompanyList: ['顺丰速运', '圆通速递', '中通快递', '百世快递', '韵达速递', '申通快递', '天天快递', '德邦快递', '邮政EMS'],
-      type: this.$route.params.type,
-      from: this.$route.params.from,
+      type: this.$route.query.type,
+      from: this.$route.query.from,
       data: {},
       showExtractButton: false,
       showAcceptedButton: false,
@@ -124,6 +120,7 @@ export default {
   },
   methods: {
     queryOrderById () {
+      console.log(this.params.id)
       if (!this.params.id) return
       this.$axios.get('/order/queryOrderById', {
         params: this.params
@@ -137,6 +134,8 @@ export default {
           this.showDeliveryButton = (this.type === 'SNACK') && (!this.data.waybillNum)
           this.showExtractButton = (this.data.statusEn === 'WAITING_EXTRACT') && (this.from !== 'kitchen') && !this.showDeliveryButton
           this.showExpressInfo = this.type === 'SNACK'
+          setTimeout(this.printOrderDetail, 1000)
+          // this.printOrderDetail()
         }
       }).catch(err => {
         console.log(err)
@@ -220,9 +219,31 @@ export default {
           this.$Notice.success({
             title: '订单正在打印..'
           })
-          window.open(window.location.origin + '/PrintOrderDetail?id=' + this.params.id + '&type=' + this.type)
+          this.$axios.post('/order/printOrder', {
+            idsJson: JSON.stringify([this.params.id])
+          }).then(res => {
+            if (res.data.code !== 666) {
+              this.$Message.warning(res.data.message)
+            } else {
+              this.printOrderDetail()
+              this.$Message.success('订单打印成功')
+            }
+          }).catch(err => {
+            console.log(err)
+          })
         }
       })
+    },
+    printOrderDetail () {
+      let subOutputRankPrint = document.getElementById('subOutputRank-print')
+      let newContent = subOutputRankPrint.innerHTML
+      // let oldContent = document.body.innerHTML
+      document.body.innerHTML = newContent
+      window.print()
+      // this.showPrintButton = true
+      // window.location.reload();
+      // document.body.innerHTML = oldContent;
+      return false
     },
     /**
      * @name 显示物流模态框
@@ -251,3 +272,18 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+body {
+  text-align: center;
+  // font-size: 18px;
+}
+#subOutputRank-print {
+  position: absolute;
+  width: 1000px;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+</style>

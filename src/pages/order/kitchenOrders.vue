@@ -26,6 +26,12 @@ export default {
         type: 'selection',
         width: 50
       }, {
+        title: '店铺名称',
+        sortable: true,
+        width: 200,
+        align: 'center',
+        key: 'shop'
+      }, {
         title: '订单编号',
         sortable: true,
         align: 'center',
@@ -43,6 +49,12 @@ export default {
         align: 'center',
         width: 140,
         key: 'orderTime'
+      }, {
+        title: '提货时间',
+        sortable: true,
+        align: 'center',
+        width: 200,
+        key: 'extractTime'
       }, {
         title: '商品信息',
         align: 'center',
@@ -125,12 +137,6 @@ export default {
         width: 120,
         align: 'center',
         key: 'productionStatus'
-      }, {
-        title: '店铺名称',
-        sortable: true,
-        width: 200,
-        align: 'center',
-        key: 'shop'
       }, {
         title: '操作',
         align: 'center',
@@ -226,9 +232,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.ids = []
-                    this.ids.push(params.row.orderID)
-                    this.printOrder(this.ids)
+                    this.printOrder(params.row.orderID)
                   }
                 }
               }, '打印订单')
@@ -311,25 +315,14 @@ export default {
      * @name 打印订单
      * @param orderId 订单ID
      */
-    printOrder (ids) {
+    printOrder (id) {
       this.$Modal.confirm({
         title: '是否打印订单',
         onOk: () => {
           this.$Notice.success({
             title: '订单正在打印..'
           })
-          this.$axios.post('/order/printOrder', {
-            idsJson: JSON.stringify(ids)
-          }).then(res => {
-            if (res.data.code !== 666) {
-              this.$Message.warning(res.data.message)
-            } else {
-              this.$refs.orders.queryOrders()
-              this.$Message.success('订单打印成功')
-            }
-          }).catch(err => {
-            console.log(err)
-          })
+          window.open(window.location.origin + '/PrintOrderDetail?id=' + this.params.id)
         }
       })
     }

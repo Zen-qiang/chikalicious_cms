@@ -18,6 +18,7 @@ const CakeOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/
 const SnackOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/snackOrders.vue')
 const KitchenOrders = () => import(/* webpackChunkName: "group-order" */ '../pages/order/kitchenOrders.vue')
 const OrderDetail = () => import(/* webpackChunkName: "group-order" */ '../pages/order/orderDetail.vue')
+const PrintOrderDetail = () => import(/* webpackChunkName: "group-order" */ '../pages/order/printOrderDetail.vue')
 // 店铺
 const ShopList = () => import(/* webpackChunkName: "group-order" */ '../pages/shop/shopList.vue')
 const ShopRegionManage = () => import(/* webpackChunkName: "group-order" */ '../pages/shop/shopRegionManage.vue')
@@ -62,6 +63,15 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/PrintOrderDetail',
+      name: 'PrintOrderDetail',
+      component: PrintOrderDetail,
+      meta: {
+        title: '打印订单',
+        requiresAuth: true
+      }
     },
     {
       path: '/index',

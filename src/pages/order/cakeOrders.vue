@@ -26,6 +26,12 @@ export default {
         name: 'COMPLETED'
       }],
       columns: [{
+        title: '店铺名称',
+        sortable: true,
+        width: 200,
+        align: 'center',
+        key: 'shop'
+      }, {
         title: '订单编号',
         sortable: true,
         align: 'center',
@@ -43,6 +49,12 @@ export default {
         align: 'center',
         width: 140,
         key: 'orderTime'
+      }, {
+        title: '提货时间',
+        sortable: true,
+        align: 'center',
+        width: 200,
+        key: 'extractTime'
       }, {
         title: '商品信息',
         align: 'center',
